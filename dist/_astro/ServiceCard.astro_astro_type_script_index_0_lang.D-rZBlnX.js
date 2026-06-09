@@ -1,0 +1,1 @@
+import{addItem as o}from"./cart.B6-qgyLf.js";document.querySelectorAll("[data-add]").forEach(t=>{t.addEventListener("click",()=>{const e=t;o({service_code:e.dataset.code||"",name:e.dataset.pname||"",price:Number(e.dataset.price||0)});const a=e.textContent;e.textContent="✓",setTimeout(()=>{e.textContent=a},1100)})});
