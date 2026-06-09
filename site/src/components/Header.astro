@@ -22,6 +22,7 @@ const links: { label: string; href: string }[] = [
   <div class="container nav-inner">
     <a href={home} class="nav-brand" aria-label="Seven Services — início">
       <img src="/brand/logo_primary_white_gold.png" alt="Seven Services" />
+      <span class="nav-slogan">{t('brand.slogan')}</span>
     </a>
 
     <button class="nav-burger" aria-label="Menu" aria-expanded="false" data-burger>
@@ -49,6 +50,7 @@ const links: { label: string; href: string }[] = [
   .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 84px; gap: 18px; }
   .nav-brand { display: flex; align-items: center; }
   .nav-brand img { height: 50px; width: auto; object-fit: contain; }
+  .nav-slogan { font-family: var(--font-head); font-style: italic; font-weight: 300; font-size: .8rem; line-height: 1.2; color: var(--g1); max-width: 22ch; margin-left: 14px; padding-left: 14px; border-left: 1px solid rgba(255,255,255,.18); }
   .nav-menu { display: flex; align-items: center; gap: 28px; }
   .nav-links { display: flex; gap: 28px; list-style: none; }
   .nav-links a {
@@ -67,6 +69,7 @@ const links: { label: string; href: string }[] = [
   @media (max-width: 960px) {
     .nav-inner { height: 72px; }
     .nav-brand img { height: 42px; }
+    .nav-slogan { display: none; }
     .nav-burger { display: flex; }
     .nav-menu {
       position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: flex-start; gap: 8px;

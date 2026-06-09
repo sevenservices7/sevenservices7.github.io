@@ -34,6 +34,8 @@ export interface TeamMember {
 export interface Service {
   code: string;
   name: string;
+  name_en?: string;
+  name_es?: string;
   category: string;
   family: string;
   price: number | null;
@@ -95,7 +97,7 @@ export async function getServices(limit?: number): Promise<Service[]> {
   try {
     let q = supabase
       .from('services')
-      .select('code,name,category,family,price,price_obs,price_label,requires_consultation,action')
+      .select('code,name,name_en,name_es,category,family,price,price_obs,price_label,requires_consultation,action')
       .eq('status', 'active')
       .order('sort_order', { ascending: true });
     if (limit) q = q.limit(limit);

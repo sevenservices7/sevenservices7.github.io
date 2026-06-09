@@ -3,6 +3,27 @@ import type { Office } from './data';
 
 const localeMap: Record<Lang, string> = { pt: 'pt-PT', en: 'en-GB', es: 'es-ES' };
 
+/** Nome do serviço no idioma ativo (cai no PT se não houver tradução). */
+export function localName(s: { name: string; name_en?: string; name_es?: string }, lang: Lang): string {
+  if (lang === 'en') return s.name_en || s.name;
+  if (lang === 'es') return s.name_es || s.name;
+  return s.name;
+}
+
+const FAMILY_LABELS: Record<string, { en: string; es: string }> = {
+  'A.T - Finanças': { en: 'Tax Authority', es: 'Hacienda' },
+  'Docs. Brasil': { en: 'Brazil Documents', es: 'Documentos Brasil' },
+  'Segurança Social': { en: 'Social Security', es: 'Seguridad Social' },
+  'Juridico': { en: 'Legal', es: 'Jurídico' },
+  'Contabilidade': { en: 'Accounting', es: 'Contabilidad' },
+  'Outros': { en: 'Other', es: 'Otros' },
+};
+/** Rótulo da família no idioma ativo (AIMA/IMT mantêm-se; 'Juridico' mostra com acento em PT). */
+export function familyLabel(family: string, lang: Lang): string {
+  if (lang === 'pt') return family === 'Juridico' ? 'Jurídico' : family;
+  return FAMILY_LABELS[family]?.[lang] ?? family;
+}
+
 export function money(value: number | null | undefined, lang: Lang): string {
   if (value == null) return '—';
   return new Intl.NumberFormat(localeMap[lang], { style: 'currency', currency: 'EUR' }).format(value);

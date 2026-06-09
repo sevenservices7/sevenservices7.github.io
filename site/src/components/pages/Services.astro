@@ -1,12 +1,14 @@
 ---
 import { useTranslations, getRoute, type Lang } from '../../i18n/ui';
 import { getServices, type Service } from '../../lib/data';
+import { localName, familyLabel } from '../../lib/format';
 import ServiceCard from '../ServiceCard.astro';
 
 interface Props { lang: Lang; }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const services = await getServices();
+const L = (pt: string, en: string, es: string) => (lang === 'en' ? en : lang === 'es' ? es : pt);
 
 // ---- Catálogo completo: agrupa por família, na ordem da marca ----
 const familyOrder = ['AIMA', 'A.T - Finanças', 'Docs. Brasil', 'IMT', 'Segurança Social', 'Juridico', 'Contabilidade', 'Outros'];
@@ -22,69 +24,49 @@ const orderedKeys = [
 ];
 const groups = orderedKeys.map((f) => [f, byFamily.get(f)!] as [string, Service[]]);
 
-// ---- Destaques (apresentação curada) ----
-const svc = (o: Partial<Service> & { name: string; family: string }): Service => ({
-  code: o.code ?? '', name: o.name, category: '', family: o.family,
-  price: o.price ?? null, price_obs: o.price_obs ?? '', price_label: o.price_label,
-  requires_consultation: o.requires_consultation, action: o.action ?? 'add',
-});
+// ---- Destaques (lista plana, compacta) ----
+const byCode = new Map(services.map((s) => [s.code, s]));
+const get = (code: string) => byCode.get(code);
+const nac: Service = {
+  code: 'JR375-nac', name: L('Nacionalidade Portuguesa', 'Portuguese Citizenship', 'Nacionalidad Portuguesa'),
+  category: '', family: 'Juridico', price: 550, price_label: 'a partir de 550 €',
+  requires_consultation: true, action: 'book',
+  price_obs: L('Taxa de 250 € não inclusa', '€250 government fee not included', 'Tasa de 250 € no incluida'),
+};
 
 type Feat =
-  | { type: 'card'; service: Service }
-  | { type: 'group'; title: string; subtitle: string; label: string; book: boolean; variants: Service[] };
+  | { t: 'c'; code: string }
+  | { t: 'b'; service: Service }
+  | { t: 'g'; title: string; subtitle: string; label: string; book: boolean; variants: string[] };
 
-const featured: { family: string; items: Feat[] }[] = [
-  { family: 'AIMA', items: [
-    { type: 'card', service: svc({ code: 'AM152', name: 'Defesa - Audiência Prévia', family: 'AIMA', price: 250, price_label: 'a partir de 250 €', requires_consultation: true, action: 'book' }) },
-    { type: 'card', service: svc({ code: 'AM156', name: 'Reagrupamento Familiar', family: 'AIMA', price: 150, price_label: 'a partir de 150 €', requires_consultation: true, action: 'book' }) },
-    { type: 'group', title: 'Renovação de Residência', label: 'a partir de 100 €', book: false,
-      subtitle: 'Títulos caducados até 30/06/2025 · após 30/06/2025 · Menores · CPLP · Longa duração',
-      variants: [
-        svc({ code: 'AM160', name: 'Renovação A.R - pós 30/06/2025', family: 'AIMA', price: 125, price_label: '125 €', action: 'add' }),
-        svc({ code: 'AM157', name: 'Renovação A.R - Até 30/06/2025', family: 'AIMA', price: 100, price_label: '100 €', action: 'add' }),
-        svc({ code: 'AM161', name: 'Renovação AR - Menores', family: 'AIMA', price: 140, price_label: '140 €', action: 'add' }),
-        svc({ code: 'AM162', name: 'Renovação AR - CPLP', family: 'AIMA', price: 100, price_label: '100 €', action: 'add' }),
-        svc({ code: 'AM163', name: 'Renovação AR - Longa Duração', family: 'AIMA', price: 100, price_label: '100 €', action: 'add' }),
-      ] },
-    { type: 'card', service: svc({ code: 'AM165', name: 'Consultar Processo (Online)', family: 'AIMA', price: 50, price_label: '50 €', action: 'add' }) },
-    { type: 'card', service: svc({ code: 'AM167', name: 'Consultoria AIMA', family: 'AIMA', price: 80, price_label: '80 €', action: 'add' }) },
-  ] },
-  { family: 'A.T - Finanças', items: [
-    { type: 'card', service: svc({ code: 'AT109', name: 'NIF', family: 'A.T - Finanças', price: 80, price_label: '80 €', action: 'add' }) },
-    { type: 'card', service: svc({ code: 'AT103', name: 'Início de Atividade', family: 'A.T - Finanças', price: 80, price_label: '80 €', action: 'add' }) },
-    { type: 'card', service: svc({ code: 'AT106', name: 'IRS', family: 'A.T - Finanças', price: 30, price_label: '30 €', action: 'add' }) },
-    { type: 'card', service: svc({ code: 'AT112', name: 'Recibo Verde', family: 'A.T - Finanças', price: 15, price_label: '15 €', action: 'add' }) },
-  ] },
-  { family: 'Docs. Brasil', items: [
-    { type: 'card', service: svc({ code: 'BR269', name: 'Título de Eleitor (Emissão)', family: 'Docs. Brasil', price: 90, price_label: '90 €', action: 'add' }) },
-    { type: 'card', service: svc({ code: 'BR255', name: 'Certidão de Nascimento/Casamento + Apostila', family: 'Docs. Brasil', price: 150, price_label: '150 €', action: 'add' }) },
-    { type: 'card', service: svc({ code: 'BR259', name: 'CPF (Emissão)', family: 'Docs. Brasil', price: 80, price_label: '80 €', action: 'add' }) },
-    { type: 'card', service: svc({ code: 'BR268', name: 'Saída Fiscal', family: 'Docs. Brasil', price: 40, price_label: '40 €', action: 'add' }) },
-  ] },
-  { family: 'IMT', items: [
-    { type: 'card', service: svc({ code: 'IM307', name: 'Troca de Carta de Condução Estrangeira', family: 'IMT', price: 100, price_label: '100 €', action: 'add', price_obs: 'Não inclui exame médico' }) },
-  ] },
-  { family: 'Segurança Social', items: [
-    { type: 'card', service: svc({ code: 'SS404', name: 'NISS', family: 'Segurança Social', price: 120, price_label: '120 €', action: 'add' }) },
-    { type: 'card', service: svc({ code: 'SS408', name: 'Subsídio de Desemprego', family: 'Segurança Social', price: 80, price_label: '80 €', action: 'add' }) },
-  ] },
-  { family: 'Jurídico', items: [
-    { type: 'card', service: svc({ code: 'JR387', name: 'Notificação de Abandono Voluntário (NAV)', family: 'Jurídico', price: 400, price_label: '400 €', action: 'add', price_obs: '400 € a 600 €' }) },
-    { type: 'group', title: 'Ações Judiciais', label: 'a partir de 700 €', book: true,
-      subtitle: 'Atraso na emissão de A.R · Indeferimento de A.R · Renovação de A.R · Reagrupamento familiar · Nacionalidade · CPLP · Estudante · Manifestação de Interesse · Visto sem agendamento',
-      variants: [
-        svc({ code: 'JR350', name: 'Atraso emissão A.R', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
-        svc({ code: 'JR353', name: 'Indeferimento A.R', family: 'Jurídico', price: 1200, price_label: 'a partir de 1200 €', requires_consultation: true, action: 'book', price_obs: 'Somente a pronto pagamento' }),
-        svc({ code: 'JR357', name: 'Renovar A.R', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
-        svc({ code: 'JR356', name: 'Reagrupamento Familiar', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
-        svc({ code: 'JR355', name: 'Nacionalidade', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
-        svc({ code: 'JR351', name: 'CPLP', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
-        svc({ code: 'JR352', name: 'Estudante', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
-        svc({ code: 'JR354', name: 'Manifestação de Interesse', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
-        svc({ code: 'JR358', name: 'Visto sem agendamento', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
-      ] },
-    { type: 'card', service: svc({ code: 'JR375', name: 'Nacionalidade Portuguesa', family: 'Jurídico', price: 550, price_label: 'a partir de 550 €', requires_consultation: true, action: 'book', price_obs: 'Taxa de 250 € não inclusa' }) },
-  ] },
+const featured: Feat[] = [
+  { t: 'c', code: 'AM152' },
+  { t: 'c', code: 'AM156' },
+  { t: 'g', title: L('Renovação de Residência', 'Residence Permit Renewal', 'Renovación de Residencia'),
+    subtitle: L('Títulos caducados até 30/06/2025 · após 30/06/2025 · Menores · CPLP · Longa duração',
+                'Permits expired until 30/06/2025 · after 30/06/2025 · Minors · CPLP · Long-term',
+                'Títulos caducados hasta 30/06/2025 · tras 30/06/2025 · Menores · CPLP · Larga duración'),
+    label: 'a partir de 100 €', book: false, variants: ['AM160', 'AM157', 'AM161', 'AM162', 'AM163'] },
+  { t: 'c', code: 'AM165' },
+  { t: 'c', code: 'AM167' },
+  { t: 'c', code: 'AT109' },
+  { t: 'c', code: 'AT103' },
+  { t: 'c', code: 'AT106' },
+  { t: 'c', code: 'AT112' },
+  { t: 'c', code: 'BR269' },
+  { t: 'c', code: 'BR255' },
+  { t: 'c', code: 'BR259' },
+  { t: 'c', code: 'BR268' },
+  { t: 'c', code: 'IM307' },
+  { t: 'c', code: 'SS404' },
+  { t: 'c', code: 'SS408' },
+  { t: 'c', code: 'JR387' },
+  { t: 'g', title: L('Ações Judiciais', 'Lawsuits', 'Acciones Judiciales'),
+    subtitle: L('Atraso na emissão de A.R · Indeferimento · Renovação · Reagrupamento familiar · Nacionalidade · CPLP · Estudante · Manifestação de Interesse · Visto sem agendamento',
+                'Residence permit delay · Refusal · Renewal · Family reunification · Citizenship · CPLP · Student · Expression of interest · Visa without appointment',
+                'Retraso en residencia · Denegación · Renovación · Reagrupación familiar · Nacionalidad · CPLP · Estudiante · Manifestación de interés · Visado sin cita'),
+    label: 'a partir de 700 €', book: true, variants: ['JR350', 'JR353', 'JR357', 'JR356', 'JR355', 'JR351', 'JR352', 'JR354', 'JR358'] },
+  { t: 'b', service: nac },
 ];
 ---
 <section class="bg-navy center">
@@ -95,41 +77,37 @@ const featured: { family: string; items: Feat[] }[] = [
   </div>
 </section>
 
-<!-- DESTAQUES -->
+<!-- DESTAQUES (compacto, sem separação por família) -->
 <section class="bg-off">
   <div class="container">
     <div class="section-head center"><span class="eyebrow">{t('home.services.eyebrow')}</span><h2>{t('services.featuredTitle')}</h2></div>
-    {featured.map((g) => (
-      <div class="feat-group">
-        <h3 class="feat-fam">{g.family}</h3>
-        <div class="grid cols-3">
-          {g.items.map((it) => (
-            it.type === 'card' ? (
-              <ServiceCard service={it.service} lang={lang} />
-            ) : (
-              <details class="fgroup">
-                <summary class="fgroup-sum">
-                  <div class="fgroup-main">
-                    <span class="svc-fam">{g.family}</span>
-                    <h4 class="fgroup-title">{it.title}</h4>
-                    <p class="fgroup-sub">{it.subtitle}</p>
-                  </div>
-                  <div class="fgroup-foot">
-                    <span class="svc-price">{it.label}</span>
-                    <span class="btn btn-gold btn-sm">{it.book ? t('nav.booking') : t('services.seeOptions')}</span>
-                  </div>
-                </summary>
-                <div class="fgroup-variants">
-                  <div class="grid cols-3">
-                    {it.variants.map((v) => <ServiceCard service={v} lang={lang} />)}
-                  </div>
-                </div>
-              </details>
-            )
-          ))}
-        </div>
-      </div>
-    ))}
+    <div class="featured-grid">
+      {featured.map((it) => (
+        it.t === 'c' ? (
+          get(it.code) ? <ServiceCard service={get(it.code)!} lang={lang} compact /> : null
+        ) : it.t === 'b' ? (
+          <ServiceCard service={it.service} lang={lang} compact />
+        ) : (
+          <details class="fgroup">
+            <summary class="fgroup-sum">
+              <div class="fgroup-main">
+                <h4 class="fgroup-title">{it.title}</h4>
+                <p class="fgroup-sub">{it.subtitle}</p>
+              </div>
+              <div class="fgroup-foot">
+                <span class="svc-price">{it.label}</span>
+                <span class="btn btn-gold btn-sm">{it.book ? t('nav.booking') : t('services.seeOptions')}</span>
+              </div>
+            </summary>
+            <div class="fgroup-variants">
+              <div class="featured-grid">
+                {it.variants.map((code) => (get(code) ? <ServiceCard service={get(code)!} lang={lang} compact /> : null))}
+              </div>
+            </div>
+          </details>
+        )
+      ))}
+    </div>
   </div>
 </section>
 
@@ -141,16 +119,16 @@ const featured: { family: string; items: Feat[] }[] = [
       <input id="svc-search" type="search" class="cat-search" placeholder={t('services.search')} aria-label={t('services.search')} />
       <div class="cat-chips">
         <button class="chip is-active" data-fam="all">{t('services.filterAll')}</button>
-        {groups.map(([family]) => <button class="chip" data-fam={family}>{family}</button>)}
+        {groups.map(([family]) => <button class="chip" data-fam={family}>{familyLabel(family, lang)}</button>)}
       </div>
     </div>
     <div class="cat-groups">
       {groups.map(([family, items]) => (
         <div class="cat-group" data-fam-group={family}>
-          <h3 class="svc-group-title">{family}</h3>
+          <h3 class="svc-group-title">{familyLabel(family, lang)}</h3>
           <div class="grid cols-3">
             {items.map((s) => (
-              <div class="svc-wrap" data-fam={family} data-name={s.name.toLowerCase()}>
+              <div class="svc-wrap" data-fam={family} data-name={localName(s, lang).toLowerCase()}>
                 <ServiceCard service={s} lang={lang} />
               </div>
             ))}
@@ -165,18 +143,15 @@ const featured: { family: string; items: Feat[] }[] = [
 </section>
 
 <style>
-  .feat-group { margin-bottom: clamp(28px, 4vw, 44px); }
-  .feat-fam { font-size: 1rem; color: var(--g0); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--g3); }
-
-  .fgroup { grid-column: 1 / -1; background: var(--seven-white); border: 1px solid var(--seven-line); border-left: 3px solid var(--g1); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); }
-  .fgroup-sum { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 22px; padding: 22px 26px; }
+  .featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(216px, 1fr)); gap: 14px; align-items: stretch; }
+  .fgroup { grid-column: 1 / -1; background: var(--seven-white); border: 1px solid var(--seven-line); border-left: 3px solid var(--g1); border-radius: 12px; box-shadow: var(--shadow-sm); }
+  .fgroup-sum { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 16px 20px; }
   .fgroup-sum::-webkit-details-marker { display: none; }
-  .fgroup-main { display: flex; flex-direction: column; gap: 4px; }
-  .fgroup-title { font-family: var(--font-head); font-weight: 600; font-size: 1.2rem; color: var(--seven-navy-deep); margin: 2px 0; }
-  .fgroup-sub { color: var(--seven-muted); font-size: .82rem; line-height: 1.5; margin: 0; max-width: 60ch; }
-  .fgroup-foot { display: flex; align-items: center; gap: 16px; flex: none; }
-  .fgroup-variants { padding: 0 26px 26px; }
-  .fgroup[open] .fgroup-foot .btn { opacity: .65; }
+  .fgroup-main { display: flex; flex-direction: column; gap: 3px; }
+  .fgroup-title { font-family: var(--font-head); font-weight: 600; font-size: 1.08rem; color: var(--seven-navy-deep); margin: 0; }
+  .fgroup-sub { color: var(--seven-muted); font-size: .78rem; line-height: 1.45; margin: 0; max-width: 70ch; }
+  .fgroup-foot { display: flex; align-items: center; gap: 14px; flex: none; }
+  .fgroup-variants { padding: 0 20px 20px; }
 
   .cat-filters { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; margin-bottom: 28px; }
   .cat-search { flex: 1 1 260px; max-width: 360px; padding: 11px 16px; border: 1px solid var(--seven-line); border-radius: 999px; font: inherit; background: var(--seven-white); }
@@ -190,7 +165,7 @@ const featured: { family: string; items: Feat[] }[] = [
   .svc-wrap { display: flex; }
   .svc-wrap > :global(.svc) { width: 100%; }
 
-  @media (max-width: 640px) { .fgroup-sum { flex-direction: column; align-items: flex-start; gap: 14px; } }
+  @media (max-width: 640px) { .fgroup-sum { flex-direction: column; align-items: flex-start; gap: 12px; } }
 </style>
 
 <script>

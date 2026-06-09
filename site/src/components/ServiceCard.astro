@@ -1,19 +1,21 @@
 ---
 import { useTranslations, getRoute, type Lang } from '../i18n/ui';
-import { money } from '../lib/format';
+import { money, localName, familyLabel } from '../lib/format';
 import type { Service } from '../lib/data';
 
-interface Props { service: Service; lang: Lang; }
-const { service, lang } = Astro.props;
+interface Props { service: Service; lang: Lang; compact?: boolean; }
+const { service, lang, compact = false } = Astro.props;
 const t = useTranslations(lang);
 
+const displayName = localName(service, lang);
+const famLabel = familyLabel(service.family, lang);
 const needsConsult = service.requires_consultation === true || service.action === 'book';
 const canAdd = !needsConsult && service.price != null && service.price > 0;
 const label = service.price_label || (service.price != null ? money(service.price, lang) : '—');
 ---
-<article class="svc">
-  {service.family && <span class="svc-fam">{service.family}</span>}
-  <h3 class="svc-name">{service.name}</h3>
+<article class:list={['svc', { 'svc-compact': compact }]}>
+  {service.family && <span class="svc-fam">{famLabel}</span>}
+  <h3 class="svc-name">{displayName}</h3>
   {service.price_obs && <p class="svc-obs">{service.price_obs}</p>}
   {needsConsult && <p class="svc-consult">{t('services.consultNote')}</p>}
   <div class="svc-foot">
@@ -21,7 +23,7 @@ const label = service.price_label || (service.price != null ? money(service.pric
     {needsConsult ? (
       <a href={getRoute('booking', lang)} class="btn btn-gold btn-sm">{t('nav.booking')}</a>
     ) : canAdd ? (
-      <button class="btn btn-gold btn-sm" data-add data-code={service.code} data-pname={service.name} data-price={service.price}>
+      <button class="btn btn-gold btn-sm" data-add data-code={service.code} data-pname={displayName} data-price={service.price}>
         {t('common.addToCart')}
       </button>
     ) : null}
@@ -45,6 +47,14 @@ const label = service.price_label || (service.price != null ? money(service.pric
   .svc-consult { font-size: .78rem; color: var(--g0); line-height: 1.45; margin: 0; padding: 8px 10px; background: rgba(193,154,90,.10); border: 1px solid rgba(193,154,90,.25); border-radius: 8px; }
   .svc-foot { margin-top: auto; padding-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   .svc-price { font-family: var(--font-head); font-weight: 700; color: var(--seven-navy-deep); font-size: 1.02rem; white-space: nowrap; }
+
+  /* Variante compacta (destaques) */
+  .svc-compact { padding: 16px 18px; gap: 7px; border-radius: 12px; }
+  .svc-compact .svc-fam { font-size: .6rem; }
+  .svc-compact .svc-name { font-size: .98rem; }
+  .svc-compact .svc-obs, .svc-compact .svc-consult { font-size: .72rem; }
+  .svc-compact .svc-foot { padding-top: 8px; }
+  .svc-compact .svc-price { font-size: .92rem; }
 </style>
 
 <script>
