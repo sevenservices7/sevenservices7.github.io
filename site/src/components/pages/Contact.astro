@@ -8,6 +8,7 @@ interface Props { lang: Lang; }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const offices = await getOffices();
+const emailSubject = { pt: 'Pedido de contacto', en: 'Contact request', es: 'Solicitud de contacto' }[lang];
 ---
 <section class="bg-navy center">
   <div class="container" style="max-width:720px">
@@ -27,8 +28,14 @@ const offices = await getOffices();
         <div class="card" style="padding:24px">
           <h3>{o.name}{!o.is_open && <span class="badge badge-soon" style="margin-left:8px">{t('common.soon')}</span>}</h3>
           <p style="margin:8px 0">{o.address}</p>
+          {o.email && (
+            <p class="unit-email">
+              <a href={`mailto:${o.email}?subject=${encodeURIComponent(emailSubject)}`}>{o.email}</a>
+            </p>
+          )}
           <div style="display:grid;gap:8px;margin-top:14px">
             {o.is_open && <WhatsAppButton whatsapp={o.whatsapp} label={t('common.whatsapp')} small block />}
+            {o.email && <a href={`mailto:${o.email}?subject=${encodeURIComponent(emailSubject)}`} class="btn btn-ghost btn-sm btn-block">Email</a>}
             <a href={mapsLink(o)} target="_blank" rel="noopener" class="btn btn-ghost btn-sm btn-block">{t('common.maps')}</a>
           </div>
         </div>
@@ -36,3 +43,8 @@ const offices = await getOffices();
     </div>
   </div>
 </section>
+
+<style>
+  .unit-email a { color: var(--g0); font-family: var(--font-head); font-weight: 500; font-size: .92rem; word-break: break-all; }
+  .unit-email a:hover { color: var(--g1); text-decoration: underline; }
+</style>
