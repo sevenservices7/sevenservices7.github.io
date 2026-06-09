@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sevens.services/sitemap-index.xml
+Sitemap: https://sevenservicess.com/sitemap-index.xml
