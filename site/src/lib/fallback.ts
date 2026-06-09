@@ -68,10 +68,10 @@ export const fallbackOffices: Office[] = [
 ];
 
 export const fallbackTeam: TeamMember[] = [
-  { code: 'DJ', name: 'Danilo Jesus', role_label: 'Fundador & CEO', unit: 'Albufeira', photo_url: '', founder: true },
-  { code: 'AK', name: 'Ana Kathlyn', role_label: 'Advogada', unit: '', photo_url: '' },
-  { code: 'GR', name: 'Gabriela Ramos', role_label: 'Coordenadora de Processos', unit: 'Albufeira', photo_url: '' },
-  { code: 'DS', name: 'Dayane Silva', role_label: 'Coordenadora de Processos · Unidade de Faro', unit: 'Faro', photo_url: '' },
+  { code: 'DJ', name: 'Danilo Jesus', role_label: 'Fundador & CEO', unit: 'Albufeira', photo_url: '/team/danilo.jpg', founder: true },
+  { code: 'AK', name: 'Ana Kathlyn', role_label: 'Advogada', unit: '', photo_url: '/team/ana.jpg' },
+  { code: 'GR', name: 'Gabriela Ramos', role_label: 'Coordenadora de Processos', unit: 'Albufeira', photo_url: '/team/gabriela.jpg' },
+  { code: 'DS', name: 'Dayane Silva', role_label: 'Coordenadora de Processos · Unidade de Faro', unit: 'Faro', photo_url: '/team/dayane.jpg' },
 ];
 
 // Catálogo completo do site (136 serviços, 8 famílias). Fonte de verdade na
