@@ -1,0 +1,61 @@
+---
+import { getRoute, type Lang } from '../../i18n/ui';
+
+interface Props { lang: Lang; kind: 'success' | 'cancel'; }
+const { lang, kind } = Astro.props;
+
+const copy = {
+  pt: {
+    successTitle: 'Pagamento recebido!',
+    successBody: 'Obrigado. Enviámos a confirmação para o seu e-mail. Se escolheu Multibanco, o pagamento pode demorar a confirmar.',
+    cancelTitle: 'Pagamento cancelado',
+    cancelBody: 'Nenhum valor foi cobrado. Pode tentar novamente quando quiser.',
+    home: 'Voltar ao início', cart: 'Voltar ao carrinho',
+  },
+  en: {
+    successTitle: 'Payment received!',
+    successBody: 'Thank you. We sent a confirmation to your email. If you chose Multibanco, the payment may take a while to confirm.',
+    cancelTitle: 'Payment cancelled',
+    cancelBody: 'No amount was charged. You can try again whenever you like.',
+    home: 'Back to home', cart: 'Back to cart',
+  },
+  es: {
+    successTitle: '¡Pago recibido!',
+    successBody: 'Gracias. Enviamos la confirmación a su correo. Si eligió Multibanco, el pago puede tardar en confirmarse.',
+    cancelTitle: 'Pago cancelado',
+    cancelBody: 'No se cobró ningún importe. Puede intentarlo de nuevo cuando quiera.',
+    home: 'Volver al inicio', cart: 'Volver al carrito',
+  },
+}[lang];
+
+const isSuccess = kind === 'success';
+---
+<section class="bg-navy" style="min-height:60vh;display:flex;align-items:center">
+  <div class="container center" style="max-width:600px">
+    <div class="result-icon">{isSuccess ? '✓' : '✕'}</div>
+    <h1>{isSuccess ? copy.successTitle : copy.cancelTitle}</h1>
+    <p class="lead" style="margin-inline:auto">{isSuccess ? copy.successBody : copy.cancelBody}</p>
+    <div style="margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href={getRoute('home', lang)} class="btn btn-gold">{copy.home}</a>
+      {!isSuccess && <a href={getRoute('cart', lang)} class="btn btn-light">{copy.cart}</a>}
+    </div>
+  </div>
+</section>
+
+<style>
+  .result-icon {
+    width: 76px; height: 76px; border-radius: 50%; margin: 0 auto 20px;
+    display: flex; align-items: center; justify-content: center; font-size: 2.2rem; font-weight: 700;
+    background: var(--g1); color: var(--n1);
+  }
+</style>
+
+{isSuccess && (
+  <script>
+    // Lê o session_id do retorno do Stripe (para futura verificação de status).
+    const sid = new URLSearchParams(location.search).get('session_id');
+    if (sid) {
+      try { localStorage.removeItem('seven_cart_v1'); } catch {}
+    }
+  </script>
+)}

@@ -1,0 +1,38 @@
+---
+import { useTranslations, type Lang } from '../../i18n/ui';
+import { getOffices } from '../../lib/data';
+import { mapsLink } from '../../lib/format';
+import WhatsAppButton from '../WhatsAppButton.astro';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const offices = await getOffices();
+---
+<section class="bg-navy center">
+  <div class="container" style="max-width:720px">
+    <span class="eyebrow">{t('nav.contact')}</span>
+    <h1>{t('overlay.title')}</h1>
+    <p class="lead" style="margin-inline:auto">{t('overlay.subtitle')}</p>
+    <div style="margin-top:24px">
+      <button class="btn btn-gold" data-open-attendance>{t('common.onlineService')}</button>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="grid cols-3">
+      {offices.map((o) => (
+        <div class="card" style="padding:24px">
+          <h3>{o.name}{!o.is_open && <span class="badge badge-soon" style="margin-left:8px">{t('common.soon')}</span>}</h3>
+          <p style="margin:8px 0">{o.address}</p>
+          <div style="display:grid;gap:8px;margin-top:14px">
+            {o.is_open && <WhatsAppButton whatsapp={o.whatsapp} label={t('common.whatsapp')} small block />}
+            <a href={mapsLink(o)} target="_blank" rel="noopener" class="btn btn-ghost btn-sm btn-block">{t('common.maps')}</a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

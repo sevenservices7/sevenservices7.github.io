@@ -1,0 +1,221 @@
+---
+import { useTranslations, getRoute, type Lang } from '../../i18n/ui';
+import { getServices, type Service } from '../../lib/data';
+import ServiceCard from '../ServiceCard.astro';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const services = await getServices();
+
+// ---- Catálogo completo: agrupa por família, na ordem da marca ----
+const familyOrder = ['AIMA', 'A.T - Finanças', 'Docs. Brasil', 'IMT', 'Segurança Social', 'Juridico', 'Contabilidade', 'Outros'];
+const byFamily = new Map<string, Service[]>();
+for (const s of services) {
+  const key = s.family || 'Outros';
+  if (!byFamily.has(key)) byFamily.set(key, []);
+  byFamily.get(key)!.push(s);
+}
+const orderedKeys = [
+  ...familyOrder.filter((f) => byFamily.has(f)),
+  ...[...byFamily.keys()].filter((f) => !familyOrder.includes(f)),
+];
+const groups = orderedKeys.map((f) => [f, byFamily.get(f)!] as [string, Service[]]);
+
+// ---- Destaques (apresentação curada) ----
+const svc = (o: Partial<Service> & { name: string; family: string }): Service => ({
+  code: o.code ?? '', name: o.name, category: '', family: o.family,
+  price: o.price ?? null, price_obs: o.price_obs ?? '', price_label: o.price_label,
+  requires_consultation: o.requires_consultation, action: o.action ?? 'add',
+});
+
+type Feat =
+  | { type: 'card'; service: Service }
+  | { type: 'group'; title: string; subtitle: string; label: string; book: boolean; variants: Service[] };
+
+const featured: { family: string; items: Feat[] }[] = [
+  { family: 'AIMA', items: [
+    { type: 'card', service: svc({ code: 'AM152', name: 'Defesa - Audiência Prévia', family: 'AIMA', price: 250, price_label: 'a partir de 250 €', requires_consultation: true, action: 'book' }) },
+    { type: 'card', service: svc({ code: 'AM156', name: 'Reagrupamento Familiar', family: 'AIMA', price: 150, price_label: 'a partir de 150 €', requires_consultation: true, action: 'book' }) },
+    { type: 'group', title: 'Renovação de Residência', label: 'a partir de 100 €', book: false,
+      subtitle: 'Títulos caducados até 30/06/2025 · após 30/06/2025 · Menores · CPLP · Longa duração',
+      variants: [
+        svc({ code: 'AM160', name: 'Renovação A.R - pós 30/06/2025', family: 'AIMA', price: 125, price_label: '125 €', action: 'add' }),
+        svc({ code: 'AM157', name: 'Renovação A.R - Até 30/06/2025', family: 'AIMA', price: 100, price_label: '100 €', action: 'add' }),
+        svc({ code: 'AM161', name: 'Renovação AR - Menores', family: 'AIMA', price: 140, price_label: '140 €', action: 'add' }),
+        svc({ code: 'AM162', name: 'Renovação AR - CPLP', family: 'AIMA', price: 100, price_label: '100 €', action: 'add' }),
+        svc({ code: 'AM163', name: 'Renovação AR - Longa Duração', family: 'AIMA', price: 100, price_label: '100 €', action: 'add' }),
+      ] },
+    { type: 'card', service: svc({ code: 'AM165', name: 'Consultar Processo (Online)', family: 'AIMA', price: 50, price_label: '50 €', action: 'add' }) },
+    { type: 'card', service: svc({ code: 'AM167', name: 'Consultoria AIMA', family: 'AIMA', price: 80, price_label: '80 €', action: 'add' }) },
+  ] },
+  { family: 'A.T - Finanças', items: [
+    { type: 'card', service: svc({ code: 'AT109', name: 'NIF', family: 'A.T - Finanças', price: 80, price_label: '80 €', action: 'add' }) },
+    { type: 'card', service: svc({ code: 'AT103', name: 'Início de Atividade', family: 'A.T - Finanças', price: 80, price_label: '80 €', action: 'add' }) },
+    { type: 'card', service: svc({ code: 'AT106', name: 'IRS', family: 'A.T - Finanças', price: 30, price_label: '30 €', action: 'add' }) },
+    { type: 'card', service: svc({ code: 'AT112', name: 'Recibo Verde', family: 'A.T - Finanças', price: 15, price_label: '15 €', action: 'add' }) },
+  ] },
+  { family: 'Docs. Brasil', items: [
+    { type: 'card', service: svc({ code: 'BR269', name: 'Título de Eleitor (Emissão)', family: 'Docs. Brasil', price: 90, price_label: '90 €', action: 'add' }) },
+    { type: 'card', service: svc({ code: 'BR255', name: 'Certidão de Nascimento/Casamento + Apostila', family: 'Docs. Brasil', price: 150, price_label: '150 €', action: 'add' }) },
+    { type: 'card', service: svc({ code: 'BR259', name: 'CPF (Emissão)', family: 'Docs. Brasil', price: 80, price_label: '80 €', action: 'add' }) },
+    { type: 'card', service: svc({ code: 'BR268', name: 'Saída Fiscal', family: 'Docs. Brasil', price: 40, price_label: '40 €', action: 'add' }) },
+  ] },
+  { family: 'IMT', items: [
+    { type: 'card', service: svc({ code: 'IM307', name: 'Troca de Carta de Condução Estrangeira', family: 'IMT', price: 100, price_label: '100 €', action: 'add', price_obs: 'Não inclui exame médico' }) },
+  ] },
+  { family: 'Segurança Social', items: [
+    { type: 'card', service: svc({ code: 'SS404', name: 'NISS', family: 'Segurança Social', price: 120, price_label: '120 €', action: 'add' }) },
+    { type: 'card', service: svc({ code: 'SS408', name: 'Subsídio de Desemprego', family: 'Segurança Social', price: 80, price_label: '80 €', action: 'add' }) },
+  ] },
+  { family: 'Jurídico', items: [
+    { type: 'card', service: svc({ code: 'JR387', name: 'Notificação de Abandono Voluntário (NAV)', family: 'Jurídico', price: 400, price_label: '400 €', action: 'add', price_obs: '400 € a 600 €' }) },
+    { type: 'group', title: 'Ações Judiciais', label: 'a partir de 700 €', book: true,
+      subtitle: 'Atraso na emissão de A.R · Indeferimento de A.R · Renovação de A.R · Reagrupamento familiar · Nacionalidade · CPLP · Estudante · Manifestação de Interesse · Visto sem agendamento',
+      variants: [
+        svc({ code: 'JR350', name: 'Atraso emissão A.R', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
+        svc({ code: 'JR353', name: 'Indeferimento A.R', family: 'Jurídico', price: 1200, price_label: 'a partir de 1200 €', requires_consultation: true, action: 'book', price_obs: 'Somente a pronto pagamento' }),
+        svc({ code: 'JR357', name: 'Renovar A.R', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
+        svc({ code: 'JR356', name: 'Reagrupamento Familiar', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
+        svc({ code: 'JR355', name: 'Nacionalidade', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
+        svc({ code: 'JR351', name: 'CPLP', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
+        svc({ code: 'JR352', name: 'Estudante', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
+        svc({ code: 'JR354', name: 'Manifestação de Interesse', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
+        svc({ code: 'JR358', name: 'Visto sem agendamento', family: 'Jurídico', price: 700, price_label: 'a partir de 700 €', requires_consultation: true, action: 'book' }),
+      ] },
+    { type: 'card', service: svc({ code: 'JR375', name: 'Nacionalidade Portuguesa', family: 'Jurídico', price: 550, price_label: 'a partir de 550 €', requires_consultation: true, action: 'book', price_obs: 'Taxa de 250 € não inclusa' }) },
+  ] },
+];
+---
+<section class="bg-navy center">
+  <div class="container" style="max-width:720px">
+    <span class="eyebrow">{t('home.services.eyebrow')}</span>
+    <h1>{t('home.services.title')}</h1>
+    <p class="lead" style="margin-inline:auto">{t('home.services.subtitle')}</p>
+  </div>
+</section>
+
+<!-- DESTAQUES -->
+<section class="bg-off">
+  <div class="container">
+    <div class="section-head center"><span class="eyebrow">{t('home.services.eyebrow')}</span><h2>{t('services.featuredTitle')}</h2></div>
+    {featured.map((g) => (
+      <div class="feat-group">
+        <h3 class="feat-fam">{g.family}</h3>
+        <div class="grid cols-3">
+          {g.items.map((it) => (
+            it.type === 'card' ? (
+              <ServiceCard service={it.service} lang={lang} />
+            ) : (
+              <details class="fgroup">
+                <summary class="fgroup-sum">
+                  <div class="fgroup-main">
+                    <span class="svc-fam">{g.family}</span>
+                    <h4 class="fgroup-title">{it.title}</h4>
+                    <p class="fgroup-sub">{it.subtitle}</p>
+                  </div>
+                  <div class="fgroup-foot">
+                    <span class="svc-price">{it.label}</span>
+                    <span class="btn btn-gold btn-sm">{it.book ? t('nav.booking') : t('services.seeOptions')}</span>
+                  </div>
+                </summary>
+                <div class="fgroup-variants">
+                  <div class="grid cols-3">
+                    {it.variants.map((v) => <ServiceCard service={v} lang={lang} />)}
+                  </div>
+                </div>
+              </details>
+            )
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- CATÁLOGO COMPLETO -->
+<section>
+  <div class="container">
+    <div class="section-head center"><h2>{t('services.allTitle')}</h2></div>
+    <div class="cat-filters">
+      <input id="svc-search" type="search" class="cat-search" placeholder={t('services.search')} aria-label={t('services.search')} />
+      <div class="cat-chips">
+        <button class="chip is-active" data-fam="all">{t('services.filterAll')}</button>
+        {groups.map(([family]) => <button class="chip" data-fam={family}>{family}</button>)}
+      </div>
+    </div>
+    <div class="cat-groups">
+      {groups.map(([family, items]) => (
+        <div class="cat-group" data-fam-group={family}>
+          <h3 class="svc-group-title">{family}</h3>
+          <div class="grid cols-3">
+            {items.map((s) => (
+              <div class="svc-wrap" data-fam={family} data-name={s.name.toLowerCase()}>
+                <ServiceCard service={s} lang={lang} />
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="center" style="margin-top:36px">
+      <a href={getRoute('cart', lang)} class="btn btn-gold">{t('common.cart')}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .feat-group { margin-bottom: clamp(28px, 4vw, 44px); }
+  .feat-fam { font-size: 1rem; color: var(--g0); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--g3); }
+
+  .fgroup { grid-column: 1 / -1; background: var(--seven-white); border: 1px solid var(--seven-line); border-left: 3px solid var(--g1); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); }
+  .fgroup-sum { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 22px; padding: 22px 26px; }
+  .fgroup-sum::-webkit-details-marker { display: none; }
+  .fgroup-main { display: flex; flex-direction: column; gap: 4px; }
+  .fgroup-title { font-family: var(--font-head); font-weight: 600; font-size: 1.2rem; color: var(--seven-navy-deep); margin: 2px 0; }
+  .fgroup-sub { color: var(--seven-muted); font-size: .82rem; line-height: 1.5; margin: 0; max-width: 60ch; }
+  .fgroup-foot { display: flex; align-items: center; gap: 16px; flex: none; }
+  .fgroup-variants { padding: 0 26px 26px; }
+  .fgroup[open] .fgroup-foot .btn { opacity: .65; }
+
+  .cat-filters { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+  .cat-search { flex: 1 1 260px; max-width: 360px; padding: 11px 16px; border: 1px solid var(--seven-line); border-radius: 999px; font: inherit; background: var(--seven-white); }
+  .cat-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font-family: var(--font-head); font-size: .8rem; font-weight: 500; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--seven-line); background: var(--seven-white); color: var(--seven-navy-deep); cursor: pointer; transition: all var(--dur-fast) var(--ease-out); }
+  .chip:hover { border-color: var(--g2); }
+  .chip.is-active { background: var(--seven-navy-deep); color: #fff; border-color: var(--seven-navy-deep); }
+
+  .cat-group { margin-bottom: clamp(32px, 5vw, 52px); }
+  .svc-group-title { font-size: 1.1rem; color: var(--g0); margin-bottom: 18px; padding-bottom: 8px; border-bottom: 2px solid var(--g3); }
+  .svc-wrap { display: flex; }
+  .svc-wrap > :global(.svc) { width: 100%; }
+
+  @media (max-width: 640px) { .fgroup-sum { flex-direction: column; align-items: flex-start; gap: 14px; } }
+</style>
+
+<script>
+  const search = document.getElementById('svc-search') as HTMLInputElement | null;
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.cat-chips .chip'));
+  const wraps = Array.from(document.querySelectorAll<HTMLElement>('.svc-wrap'));
+  const groups = Array.from(document.querySelectorAll<HTMLElement>('.cat-group'));
+  let fam = 'all';
+  let q = '';
+  function apply() {
+    wraps.forEach((w) => {
+      const okFam = fam === 'all' || w.dataset.fam === fam;
+      const okQ = !q || (w.dataset.name || '').includes(q);
+      w.style.display = okFam && okQ ? '' : 'none';
+    });
+    groups.forEach((g) => {
+      const any = Array.from(g.querySelectorAll<HTMLElement>('.svc-wrap')).some((w) => w.style.display !== 'none');
+      g.style.display = any ? '' : 'none';
+    });
+  }
+  chips.forEach((c) => c.addEventListener('click', () => {
+    chips.forEach((x) => x.classList.remove('is-active'));
+    c.classList.add('is-active');
+    fam = c.dataset.fam || 'all';
+    apply();
+  }));
+  search?.addEventListener('input', () => { q = (search.value || '').trim().toLowerCase(); apply(); });
+</script>

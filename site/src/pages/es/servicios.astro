@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro';
+import Services from '../../components/pages/Services.astro';
+import { useTranslations } from '../../i18n/ui';
+const t = useTranslations('es');
+---
+<Base title={`${t('nav.services')} — ${t('site.name')}`} description={t('home.services.subtitle')} routeKey="services">
+  <Services lang="es" />
+</Base>

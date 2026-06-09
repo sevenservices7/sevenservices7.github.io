@@ -1,0 +1,11 @@
+---
+import Base from '../../layouts/Base.astro';
+import Home from '../../components/pages/Home.astro';
+import UnitsOverlay from '../../components/UnitsOverlay.astro';
+import { useTranslations } from '../../i18n/ui';
+const t = useTranslations('es');
+---
+<Base title={`${t('site.name')} — ${t('site.tagline')}`} description={t('home.hero.subtitle')} routeKey="home">
+  <UnitsOverlay lang="es" />
+  <Home lang="es" />
+</Base>

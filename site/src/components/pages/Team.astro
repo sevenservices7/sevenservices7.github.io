@@ -1,0 +1,94 @@
+---
+import { useTranslations, type Lang } from '../../i18n/ui';
+import { getTeam } from '../../lib/data';
+import { initials } from '../../lib/format';
+import PersonCard from '../PersonCard.astro';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const team = await getTeam();
+const founder = team.find((m) => m.founder) ?? team[0];
+const others = team.filter((m) => m !== founder);
+
+type Bio = { role: string; languages: string; phrase: string };
+const TEAM: Record<Lang, Record<string, Bio>> = {
+  pt: {
+    DJ: { role: 'Fundador & CEO', languages: 'Português, espanhol', phrase: '«Traz-me o problema, que eu trago a solução.» Rápido e determinado, o objetivo dele é um só: que o cliente conquiste o que veio buscar.' },
+    AK: { role: 'Advogada', languages: 'Português, inglês', phrase: 'Alto sentido de justiça e muita empatia. É quem garante que cada processo assenta em terreno legal firme.' },
+    GR: { role: 'Coordenadora de Processos', languages: 'Português, inglês, espanhol', phrase: 'O braço-direito da operação. Inteligente, rápida e atenciosa — é por muitas mãos dela que os processos passam.' },
+    DS: { role: 'Coordenadora de Processos · Unidade de Faro', languages: 'Português', phrase: 'Contabilista de formação, simpatia em pessoa. Cuida de quem chega a Faro com a atenção de quem trata de gente, não de papéis.' },
+  },
+  en: {
+    DJ: { role: 'Founder & CEO', languages: 'Portuguese, Spanish', phrase: '«Bring me the problem, and I’ll bring the solution.» Fast and determined, he has one goal: that the client gets what they came for.' },
+    AK: { role: 'Lawyer', languages: 'Portuguese, English', phrase: 'A strong sense of justice and great empathy. She makes sure every case stands on solid legal ground.' },
+    GR: { role: 'Process Coordinator', languages: 'Portuguese, English, Spanish', phrase: 'The right hand of the operation. Smart, fast and attentive — many of our cases pass through her hands.' },
+    DS: { role: 'Process Coordinator · Faro location', languages: 'Portuguese', phrase: 'An accountant by training, kindness in person. She looks after those who arrive in Faro with the care of someone who handles people, not papers.' },
+  },
+  es: {
+    DJ: { role: 'Fundador & CEO', languages: 'Portugués, español', phrase: '«Tráeme el problema, que yo traigo la solución.» Rápido y decidido, su objetivo es uno solo: que el cliente consiga lo que vino a buscar.' },
+    AK: { role: 'Abogada', languages: 'Portugués, inglés', phrase: 'Alto sentido de la justicia y mucha empatía. Es quien garantiza que cada proceso se asienta en terreno legal firme.' },
+    GR: { role: 'Coordinadora de Procesos', languages: 'Portugués, inglés, español', phrase: 'El brazo derecho de la operación. Inteligente, rápida y atenta — por muchas de sus manos pasan los procesos.' },
+    DS: { role: 'Coordinadora de Procesos · Sede de Faro', languages: 'Portugués', phrase: 'Contable de formación, simpatía en persona. Cuida de quien llega a Faro con la atención de quien trata con personas, no con papeles.' },
+  },
+};
+const langsLabel = { pt: 'Idiomas', en: 'Languages', es: 'Idiomas' }[lang];
+const closing = {
+  pt: 'Atendemos em português, inglês e espanhol — na língua em que se sentir à vontade.',
+  en: 'We serve in Portuguese, English and Spanish — in whichever language you feel most comfortable.',
+  es: 'Atendemos en portugués, inglés y español — en el idioma en el que se sienta cómodo.',
+}[lang];
+const info = (code: string): Bio => TEAM[lang][code] ?? { role: '', languages: '', phrase: '' };
+const f = info(founder?.code ?? '');
+---
+<section class="bg-navy center">
+  <div class="container" style="max-width:720px">
+    <span class="eyebrow">{t('team.eyebrow')}</span>
+    <h1>{t('team.title')}</h1>
+  </div>
+</section>
+
+{founder && (
+  <section>
+    <div class="container founder-block">
+      <div class="founder-photo">
+        {founder.photo_url ? (
+          <img src={founder.photo_url} alt={founder.name} />
+        ) : (
+          <span class="founder-initials" aria-hidden="true">{initials(founder.name)}</span>
+        )}
+      </div>
+      <div>
+        <span class="eyebrow">{f.role}</span>
+        <h2>{founder.name}</h2>
+        <p class="founder-langs">{langsLabel}: {f.languages}</p>
+        <p class="lead" style="margin-top:12px">{f.phrase}</p>
+      </div>
+    </div>
+  </section>
+)}
+
+<section class="bg-off">
+  <div class="container">
+    <div class="grid cols-3">
+      {others.map((m) => (
+        <PersonCard member={m} role={info(m.code).role} languages={info(m.code).languages} langsLabel={langsLabel} phrase={info(m.code).phrase} />
+      ))}
+    </div>
+    <p class="team-closing center">{closing}</p>
+  </div>
+</section>
+
+<style>
+  .founder-block { display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: center; max-width: 860px; margin-inline: auto; }
+  .founder-photo {
+    width: 168px; height: 168px; border-radius: 50%; overflow: hidden; flex: none;
+    background: var(--grad-navy); display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-md); border: 3px solid var(--g1);
+  }
+  .founder-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .founder-initials { font-family: var(--font-head); font-weight: 700; font-size: 3rem; color: var(--g1); }
+  .founder-langs { font-family: var(--font-head); font-size: .74rem; text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--g0); margin: 6px 0 0; }
+  .team-closing { margin-top: 40px; font-family: var(--font-head); font-style: italic; font-weight: 300; font-size: clamp(1.1rem, 2.2vw, 1.4rem); color: var(--seven-navy-deep); max-width: 720px; margin-inline: auto; }
+  @media (max-width: 680px) { .founder-block { grid-template-columns: 1fr; text-align: center; justify-items: center; } }
+</style>

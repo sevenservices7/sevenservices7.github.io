@@ -1,0 +1,57 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+import { mapsLink, dateLong } from '../lib/format';
+import type { Office } from '../lib/data';
+import WhatsAppButton from './WhatsAppButton.astro';
+
+interface Props {
+  office: Office;
+  lang: Lang;
+  compact?: boolean;
+}
+const { office, lang, compact = false } = Astro.props;
+const t = useTranslations(lang);
+const unitHref =
+  lang === 'en' ? `/en/units/${office.slug}` : lang === 'es' ? `/es/unidades/${office.slug}` : `/unidades/${office.slug}`;
+const waText =
+  lang === 'en'
+    ? `Hello! I'd like information from the ${office.name} unit.`
+    : lang === 'es'
+      ? `¡Hola! Quisiera información de la sede ${office.name}.`
+      : `Olá! Gostaria de informações da unidade ${office.name}.`;
+---
+<article class:list={['unit-card card', { compact }]}>
+  <div class="unit-top">
+    <h3>{office.name}</h3>
+    {office.is_open ? (
+      <span class="badge badge-open">{t('common.open')}</span>
+    ) : (
+      <span class="badge badge-soon">{t('common.soon')}</span>
+    )}
+  </div>
+
+  <p class="unit-addr">{office.address}</p>
+  {office.is_open && office.opening_date && (
+    <p class="unit-since muted">{t('common.openedOn')} {dateLong(office.opening_date, lang)}</p>
+  )}
+
+  <div class="unit-btns">
+    {office.is_open && (
+      <WhatsAppButton whatsapp={office.whatsapp} text={waText} label={t('common.whatsapp')} small block />
+    )}
+    <a href={mapsLink(office)} target="_blank" rel="noopener" class="btn btn-ghost btn-sm btn-block">
+      {t('common.maps')}
+    </a>
+    <a href={unitHref} class="btn btn-gold btn-sm btn-block">{t('common.viewUnit')}</a>
+  </div>
+</article>
+
+<style>
+  .unit-card { padding: 22px; display: flex; flex-direction: column; gap: 10px; }
+  .unit-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .unit-top h3 { margin: 0; }
+  .unit-addr { font-size: .92rem; }
+  .unit-since { font-size: .82rem; }
+  .unit-btns { margin-top: auto; padding-top: 12px; display: grid; gap: 8px; }
+  .unit-card.compact { padding: 18px; }
+</style>

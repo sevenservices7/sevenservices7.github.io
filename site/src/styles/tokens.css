@@ -1,0 +1,55 @@
+/* ============================================================
+   SEVEN Services — Design Tokens (handoff do Claude Design)
+   Fonte única: Bai Jamjuree (auto-hospedada em /fonts).
+   ============================================================ */
+@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-ExtraLight.ttf') format('truetype');       font-weight:200; font-style:normal; font-display:swap; }
+@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-ExtraLightItalic.ttf') format('truetype'); font-weight:200; font-style:italic; font-display:swap; }
+@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-Light.ttf') format('truetype');            font-weight:300; font-style:normal; font-display:swap; }
+@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-LightItalic.ttf') format('truetype');      font-weight:300; font-style:italic; font-display:swap; }
+@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-Regular.ttf') format('truetype');          font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-Italic.ttf') format('truetype');           font-weight:400; font-style:italic; font-display:swap; }
+@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-Medium.ttf') format('truetype');           font-weight:500; font-style:normal; font-display:swap; }
+@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-MediumItalic.ttf') format('truetype');     font-weight:500; font-style:italic; font-display:swap; }
+@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-SemiBold.ttf') format('truetype');         font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-SemiBoldItalic.ttf') format('truetype');   font-weight:600; font-style:italic; font-display:swap; }
+@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-Bold.ttf') format('truetype');             font-weight:700; font-style:normal; font-display:swap; }
+@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-BoldItalic.ttf') format('truetype');       font-weight:700; font-style:italic; font-display:swap; }
+
+:root {
+  /* ---- Marca (canônico) ---- */
+  --seven-navy:#103554; --seven-navy-deep:#0A1C44;
+  --seven-gold:#D9974B; --seven-gold-light:#F1C46B; --seven-gold-pale:#F8D378;
+  --seven-gold-mid:#E0A94F; --seven-gold-deep:#A36A3F;
+  --seven-bone:#EEF0F0; --seven-white:#FFFFFF; --seven-muted:#5A6B82; --seven-line:#D9DEE4;
+
+  /* ---- Aliases p/ componentes existentes ---- */
+  --n0:#071432; --n1:#0A1C44; --n2:#103554; --n3:#1B3058;
+  --g0:#A36A3F; --g1:#F1C46B; --g2:#D9974B; --g3:#F8D378;
+  --off:#EEF0F0; --off2:#E4E7E7; --w:#FFFFFF;
+  --b1:#D9DEE4; --b2:#C4CCD4;
+  --t1:#0A1C44; --t2:#5A6B82; --t3:#8FA1B3;
+  --ok:#1A7A4A; --warn:#D97706; --danger:#C24A4A; --info:#1D4ED8;
+
+  /* ---- Tipografia ---- */
+  --font-head:'Bai Jamjuree','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --font-body:'Bai Jamjuree',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+  --tracking-tight:-0.015em; --tracking-wide:0.06em; --tracking-wider:0.16em; --tracking-widest:0.28em;
+
+  /* ---- Sombras (navy-tinted) ---- */
+  --shadow-sm:0 1px 2px rgba(10,28,68,.06);
+  --shadow-md:0 4px 16px rgba(10,28,68,.08),0 1px 2px rgba(10,28,68,.04);
+  --shadow-lg:0 16px 40px rgba(10,28,68,.12),0 2px 6px rgba(10,28,68,.06);
+  --shadow-xl:0 24px 60px rgba(10,28,68,.2),0 8px 16px rgba(10,28,68,.08);
+  --shadow-gold:0 10px 30px rgba(217,151,75,.35);
+
+  /* ---- Raios ---- */
+  --r-sm:4px; --r-md:8px; --r-lg:14px; --r-xl:22px; --r-2xl:26px;
+
+  /* ---- Layout / gradientes / motion ---- */
+  --maxw:1200px;
+  --gutter:clamp(18px,4vw,32px);
+  --grad-navy:linear-gradient(180deg,#103554 0%,#0A1C44 100%);
+  --grad-gold:linear-gradient(135deg,#F8D378 0%,#E0A94F 35%,#D9974B 60%,#A36A3F 100%);
+  --ease-out:cubic-bezier(0.22,0.61,0.36,1);
+  --dur-fast:120ms; --dur-base:220ms; --dur-slow:420ms;
+}

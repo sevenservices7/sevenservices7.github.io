@@ -1,0 +1,18 @@
+# build output
+dist/
+.astro/
+
+# deps
+node_modules/
+
+# assets copied at build time from ../assets (not versioned here)
+public/assets/
+
+# env
+.env
+.env.production
+.env.local
+
+# misc
+.DS_Store
+*.log

@@ -1,0 +1,28 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const partners = [
+  { src: '/assets/parceiros/at-autoridade-tributaria.png', alt: 'Autoridade Tributária' },
+  { src: '/assets/parceiros/aima.png', alt: 'AIMA' },
+  { src: '/assets/parceiros/imt.png', alt: 'IMT' },
+  { src: '/assets/parceiros/seguranca-social.png', alt: 'Segurança Social' },
+];
+---
+<div class="trust">
+  <p class="trust-title">{t('home.partners.title')}</p>
+  <div class="trust-logos">
+    {partners.map((p) => <img src={p.src} alt={p.alt} loading="lazy" height="48" />)}
+  </div>
+</div>
+
+<style>
+  .trust { text-align: center; }
+  .trust-title { font-size: .85rem; letter-spacing: .04em; color: var(--t3); margin-bottom: 20px; text-transform: uppercase; }
+  .trust-logos { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: clamp(24px, 5vw, 56px); }
+  .trust-logos img { height: 48px; width: auto; opacity: .7; filter: grayscale(1); transition: opacity .2s, filter .2s; }
+  .trust-logos img:hover { opacity: 1; filter: none; }
+</style>

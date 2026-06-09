@@ -1,0 +1,96 @@
+---
+import { useTranslations, getRoute, type Lang, type RouteKey } from '../i18n/ui';
+import LangSwitcher from './LangSwitcher.astro';
+
+interface Props {
+  lang: Lang;
+  routeKey?: RouteKey;
+}
+const { lang, routeKey } = Astro.props;
+const t = useTranslations(lang);
+const home = getRoute('home', lang);
+
+const links: { label: string; href: string }[] = [
+  { label: t('nav.about'), href: getRoute('about', lang) },
+  { label: t('nav.team'), href: getRoute('team', lang) },
+  { label: t('nav.units'), href: `${home}#unidades` },
+  { label: t('nav.services'), href: getRoute('services', lang) },
+  { label: t('nav.contact'), href: getRoute('contact', lang) },
+];
+---
+<header class="nav" data-header>
+  <div class="container nav-inner">
+    <a href={home} class="nav-brand" aria-label="Seven Services — início">
+      <img src="/brand/logo_primary_white_gold.png" alt="Seven Services" />
+    </a>
+
+    <button class="nav-burger" aria-label="Menu" aria-expanded="false" data-burger>
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav-menu" data-nav>
+      <ul class="nav-links">
+        {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+      <div class="nav-actions">
+        <LangSwitcher lang={lang} routeKey={routeKey} />
+        <a href={getRoute('cart', lang)} class="nav-cart" aria-label={t('common.cart')}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="nav-cart-badge" data-cart-count hidden>0</span>
+        </a>
+        <a href={getRoute('booking', lang)} class="btn btn-gold btn-sm">{t('nav.booking')}</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .nav { position: sticky; top: 0; z-index: 40; background: var(--seven-navy-deep); color: #fff; border-bottom: 1px solid rgba(255,255,255,.06); }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 84px; gap: 18px; }
+  .nav-brand { display: flex; align-items: center; }
+  .nav-brand img { height: 50px; width: auto; object-fit: contain; }
+  .nav-menu { display: flex; align-items: center; gap: 28px; }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a {
+    color: var(--seven-bone); font-family: var(--font-head); font-weight: 500; font-size: .8rem;
+    text-transform: uppercase; letter-spacing: var(--tracking-wider);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .nav-links a:hover { color: var(--g1); }
+  .nav-actions { display: flex; align-items: center; gap: 16px; }
+  .nav-cart { position: relative; color: #fff; display: inline-flex; }
+  .nav-cart:hover { color: var(--g1); }
+  .nav-cart-badge { position: absolute; top: -8px; right: -10px; min-width: 18px; height: 18px; background: var(--g2); color: #fff; font-size: .66rem; font-weight: 700; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; padding: 0 4px; }
+  .nav-burger { display: none; flex-direction: column; gap: 5px; background: none; border: 0; cursor: pointer; padding: 8px; }
+  .nav-burger span { width: 24px; height: 2px; background: #fff; border-radius: 2px; }
+
+  @media (max-width: 960px) {
+    .nav-inner { height: 72px; }
+    .nav-brand img { height: 42px; }
+    .nav-burger { display: flex; }
+    .nav-menu {
+      position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: flex-start; gap: 8px;
+      background: var(--seven-navy-deep); padding: 18px var(--gutter) 24px; box-shadow: var(--shadow-lg);
+      border-bottom: 1px solid rgba(255,255,255,.08); display: none;
+    }
+    .nav-menu[data-open] { display: flex; }
+    .nav-links { flex-direction: column; gap: 4px; width: 100%; }
+    .nav-links a { display: block; padding: 10px 0; }
+    .nav-actions { flex-wrap: wrap; gap: 14px; padding-top: 8px; width: 100%; }
+  }
+</style>
+
+<script>
+  const burger = document.querySelector('[data-burger]');
+  const nav = document.querySelector('[data-nav]');
+  burger?.addEventListener('click', () => {
+    const open = nav?.hasAttribute('data-open');
+    if (open) nav?.removeAttribute('data-open'); else nav?.setAttribute('data-open', '');
+    burger.setAttribute('aria-expanded', String(!open));
+  });
+  import('../lib/cart').then(({ cartCount, onCartChange }) => {
+    const badge = document.querySelector('[data-cart-count]') as HTMLElement | null;
+    const render = () => { if (!badge) return; const n = cartCount(); badge.textContent = String(n); badge.hidden = n === 0; };
+    render(); onCartChange(render);
+  });
+</script>

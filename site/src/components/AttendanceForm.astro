@@ -1,0 +1,140 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+import { getOffices } from '../lib/data';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const offices = (await getOffices()).filter((o) => o.is_open);
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
+---
+<div class="att" data-attendance hidden role="dialog" aria-modal="true" aria-labelledby="att-title">
+  <div class="att-panel">
+    <button class="att-x" data-att-close aria-label="Fechar">&times;</button>
+    <span class="eyebrow">{t('common.onlineService')}</span>
+    <h3 id="att-title">{t('attendance.title')}</h3>
+    <p class="muted">{t('attendance.subtitle')}</p>
+
+    <form class="att-form" data-att-form data-success-msg={t('attendance.success')} data-error-msg={t('attendance.error')}>
+      <label>{t('attendance.name')}
+        <input name="name" type="text" required autocomplete="name" />
+      </label>
+      <div class="att-row">
+        <label>{t('attendance.email')}
+          <input name="email" type="email" required autocomplete="email" />
+        </label>
+        <label>{t('attendance.phone')}
+          <input name="phone" type="tel" required autocomplete="tel" />
+        </label>
+      </div>
+      <div class="att-row">
+        <label>{t('attendance.unit')}
+          <select name="unit_slug">
+            <option value="">{t('attendance.unitAuto')}</option>
+            {offices.map((o) => <option value={o.slug}>{o.name}</option>)}
+          </select>
+        </label>
+        <label>{t('attendance.language')}
+          <select name="language">
+            <option value="pt" selected={lang === 'pt'}>Português</option>
+            <option value="en" selected={lang === 'en'}>English</option>
+            <option value="es" selected={lang === 'es'}>Español</option>
+          </select>
+        </label>
+      </div>
+      <label>{t('attendance.message')}
+        <textarea name="message" rows="3"></textarea>
+      </label>
+      <!-- honeypot anti-spam -->
+      <input type="text" name="company" tabindex="-1" autocomplete="off" class="att-hp" aria-hidden="true" />
+
+      {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey}></div>}
+
+      <button type="submit" class="btn btn-gold btn-block" data-att-submit>{t('attendance.submit')}</button>
+      <p class="att-msg" data-att-msg hidden></p>
+    </form>
+  </div>
+</div>
+
+{turnstileKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+
+<style>
+  .att {
+    position: fixed; inset: 0; z-index: 220;
+    background: rgba(7,20,50,.62); backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center; padding: clamp(12px, 4vw, 40px); overflow-y: auto;
+  }
+  .att[hidden] { display: none; }
+  .att-panel {
+    position: relative; width: 100%; max-width: 540px; background: #fff;
+    border-radius: var(--r-xl); box-shadow: var(--shadow-xl); padding: clamp(24px, 4vw, 38px);
+  }
+  .att-x { position: absolute; top: 12px; right: 16px; background: none; border: 0; font-size: 1.8rem; color: var(--t3); cursor: pointer; }
+  .att-x:hover { color: var(--n1); }
+  .att-form { margin-top: 18px; display: grid; gap: 14px; }
+  .att-form label { display: grid; gap: 6px; font-size: .85rem; font-weight: 600; color: var(--t1); }
+  .att-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .att-form input, .att-form select, .att-form textarea {
+    font: inherit; font-weight: 400; padding: 11px 12px; border: 1px solid var(--b2);
+    border-radius: var(--r-md); background: var(--off); color: var(--t1); width: 100%;
+  }
+  .att-form input:focus, .att-form select:focus, .att-form textarea:focus { border-color: var(--g2); background: #fff; }
+  .att-hp { position: absolute; left: -9999px; width: 1px; height: 1px; }
+  .att-msg { margin: 0; font-size: .9rem; padding: 10px 12px; border-radius: var(--r-md); }
+  .att-msg.ok { background: #DCFCE7; color: var(--ok); }
+  .att-msg.err { background: #FEE2E2; color: var(--danger); }
+  @media (max-width: 520px) { .att-row { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  import { sendLead } from '../lib/api';
+
+  const modal = document.querySelector('[data-attendance]') as HTMLElement | null;
+  const form = document.querySelector('[data-att-form]') as HTMLFormElement | null;
+  const msg = document.querySelector('[data-att-msg]') as HTMLElement | null;
+  const submit = document.querySelector('[data-att-submit]') as HTMLButtonElement | null;
+
+  const open = () => { modal?.removeAttribute('hidden'); document.body.style.overflow = 'hidden'; };
+  const close = () => { modal?.setAttribute('hidden', ''); document.body.style.overflow = ''; };
+
+  window.addEventListener('seven:open-attendance', open);
+  // Delegação: qualquer botão [data-open-attendance] no site abre o formulário.
+  document.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement)?.closest('[data-open-attendance]')) open();
+  });
+  modal?.querySelectorAll('[data-att-close]').forEach((b) => b.addEventListener('click', close));
+  modal?.addEventListener('click', (e) => { if (e.target === modal) close(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal && !modal.hasAttribute('hidden')) close(); });
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form || !submit) return;
+    const fd = new FormData(form);
+    if (fd.get('company')) return; // honeypot preenchido => bot
+    const showMsg = (text: string, ok: boolean) => {
+      if (!msg) return;
+      msg.textContent = text; msg.className = `att-msg ${ok ? 'ok' : 'err'}`; msg.hidden = false;
+    };
+    submit.disabled = true;
+    const original = submit.textContent;
+    submit.textContent = '…';
+    try {
+      await sendLead({
+        name: String(fd.get('name') || ''),
+        email: String(fd.get('email') || ''),
+        phone: String(fd.get('phone') || ''),
+        unit_slug: String(fd.get('unit_slug') || ''),
+        language: String(fd.get('language') || 'pt'),
+        message: String(fd.get('message') || ''),
+        turnstile_token: String(fd.get('cf-turnstile-response') || ''),
+      });
+      showMsg(form.dataset.successMsg || 'OK', true);
+      form.reset();
+    } catch {
+      showMsg(form.dataset.errorMsg || 'Erro', false);
+    } finally {
+      submit.disabled = false;
+      submit.textContent = original;
+    }
+  });
+</script>

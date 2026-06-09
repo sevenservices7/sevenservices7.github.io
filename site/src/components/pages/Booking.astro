@@ -1,0 +1,128 @@
+---
+import { useTranslations, getRoute, type Lang } from '../../i18n/ui';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const copy = {
+  pt: { title: 'Agendar consultoria', step1: '1. Idioma da consultoria', step2: '2. Escolha um horário', step3: '3. Os seus dados', noslots: 'Os horários online estarão disponíveis em breve. Enquanto isso, fale connosco:', name: 'Nome completo', email: 'E-mail', phone: 'Telefone', pay: 'Pagar e confirmar', loading: 'A carregar horários…', book: 'Reservar e pagar' },
+  en: { title: 'Book a consultation', step1: '1. Consultation language', step2: '2. Choose a time', step3: '3. Your details', noslots: 'Online time slots will be available soon. In the meantime, talk to us:', name: 'Full name', email: 'Email', phone: 'Phone', pay: 'Pay and confirm', loading: 'Loading slots…', book: 'Book and pay' },
+  es: { title: 'Agendar consultoría', step1: '1. Idioma de la consultoría', step2: '2. Elija un horario', step3: '3. Sus datos', noslots: 'Los horarios online estarán disponibles pronto. Mientras tanto, hable con nosotros:', name: 'Nombre completo', email: 'Correo', phone: 'Teléfono', pay: 'Pagar y confirmar', loading: 'Cargando horarios…', book: 'Reservar y pagar' },
+}[lang];
+---
+<section class="bg-navy center">
+  <div class="container" style="max-width:720px">
+    <span class="eyebrow">{t('nav.booking')}</span>
+    <h1>{copy.title}</h1>
+    <p class="lead" style="margin-inline:auto">{t('home.cta.body')}</p>
+  </div>
+</section>
+
+<section>
+  <div class="container book" style="max-width:720px"
+    data-lang={lang} data-loading={copy.loading} data-noslots={copy.noslots}>
+    <div class="book-step">
+      <h3>{copy.step1}</h3>
+      <div class="book-langs" data-book-langs>
+        <button class="lang-opt" data-l="pt" aria-pressed={lang === 'pt'}>Português</button>
+        <button class="lang-opt" data-l="en" aria-pressed={lang === 'en'}>English</button>
+        <button class="lang-opt" data-l="es" aria-pressed={lang === 'es'}>Español</button>
+      </div>
+    </div>
+
+    <div class="book-step">
+      <h3>{copy.step2}</h3>
+      <div data-slots class="book-slots"><p class="muted">{copy.loading}</p></div>
+      <div data-slots-fallback hidden>
+        <p>{copy.noslots}</p>
+        <p style="margin-top:12px"><button class="btn btn-gold" data-open-attendance>{t('common.onlineService')}</button></p>
+      </div>
+    </div>
+
+    <div class="book-step" data-book-details hidden>
+      <h3>{copy.step3}</h3>
+      <div class="book-fields">
+        <input data-b-name placeholder={copy.name} autocomplete="name" />
+        <input data-b-email type="email" placeholder={copy.email} autocomplete="email" />
+        <input data-b-phone type="tel" placeholder={copy.phone} autocomplete="tel" />
+      </div>
+      <button class="btn btn-gold btn-block" style="margin-top:14px" data-book-pay>{copy.book}</button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .book-step { margin-bottom: 32px; }
+  .book-step h3 { margin-bottom: 14px; }
+  .book-langs, .book-slots { display: flex; flex-wrap: wrap; gap: 10px; }
+  .lang-opt, .slot-opt {
+    font: inherit; font-family: var(--font-head); font-weight: 600; cursor: pointer;
+    padding: 10px 16px; border: 1px solid var(--b2); border-radius: var(--r-md); background: #fff; color: var(--n1);
+  }
+  .lang-opt[aria-pressed='true'], .slot-opt[aria-pressed='true'] { background: var(--g1); border-color: var(--g2); }
+  .book-fields { display: grid; gap: 10px; }
+  .book-fields input { font: inherit; padding: 11px 12px; border: 1px solid var(--b2); border-radius: var(--r-md); background: var(--off); }
+</style>
+
+<script>
+  import { getAvailability, createBooking, createBookingCheckout } from '../../lib/api';
+
+  const root = document.querySelector('.book') as HTMLElement;
+  const lang = root.dataset.lang || 'pt';
+  let selectedLang = lang;
+  let selectedSlot: { start: string; end: string } | null = null;
+
+  const slotsEl = document.querySelector('[data-slots]') as HTMLElement;
+  const fallbackEl = document.querySelector('[data-slots-fallback]') as HTMLElement;
+  const detailsEl = document.querySelector('[data-book-details]') as HTMLElement;
+
+  document.querySelectorAll('[data-book-langs] .lang-opt').forEach((b) =>
+    b.addEventListener('click', () => {
+      selectedLang = (b as HTMLElement).dataset.l!;
+      document.querySelectorAll('[data-book-langs] .lang-opt').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    })
+  );
+
+  async function loadSlots() {
+    try {
+      const from = new Date().toISOString();
+      const to = new Date(Date.now() + 14 * 864e5).toISOString();
+      const { slots } = await getAvailability({ from, to, language: selectedLang });
+      if (!slots?.length) throw new Error('no slots');
+      slotsEl.innerHTML = '';
+      slots.slice(0, 24).forEach((s) => {
+        const btn = document.createElement('button');
+        btn.className = 'slot-opt';
+        btn.textContent = new Date(s.start).toLocaleString(lang, { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+        btn.addEventListener('click', () => {
+          selectedSlot = s;
+          slotsEl.querySelectorAll('.slot-opt').forEach((x) => x.setAttribute('aria-pressed', String(x === btn)));
+          detailsEl.hidden = false;
+        });
+        slotsEl.appendChild(btn);
+      });
+    } catch {
+      slotsEl.hidden = true;
+      fallbackEl.hidden = false;
+    }
+  }
+  loadSlots();
+
+  (document.querySelector('[data-book-pay]') as HTMLButtonElement)?.addEventListener('click', async () => {
+    if (!selectedSlot) return;
+    const { booking_id } = await createBooking({
+      language: selectedLang,
+      service_code: 'CONSULT',
+      slot_start: selectedSlot.start,
+      slot_end: selectedSlot.end,
+      customer: {
+        name: (document.querySelector('[data-b-name]') as HTMLInputElement).value,
+        email: (document.querySelector('[data-b-email]') as HTMLInputElement).value,
+        phone: (document.querySelector('[data-b-phone]') as HTMLInputElement).value,
+      },
+    });
+    const { url } = await createBookingCheckout(booking_id, selectedLang);
+    window.location.href = url;
+  });
+</script>

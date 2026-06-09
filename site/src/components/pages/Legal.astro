@@ -1,0 +1,35 @@
+---
+import { useTranslations, type Lang } from '../../i18n/ui';
+
+interface Props { lang: Lang; kind: 'terms' | 'privacy'; }
+const { lang, kind } = Astro.props;
+const t = useTranslations(lang);
+const title = kind === 'terms' ? t('footer.terms') : t('footer.privacy');
+
+const draftNote = {
+  pt: 'Texto preliminar — versão final em revisão jurídica.',
+  en: 'Preliminary text — final version under legal review.',
+  es: 'Texto preliminar — versión final en revisión jurídica.',
+}[lang];
+---
+<section class="bg-navy center">
+  <div class="container" style="max-width:720px">
+    <span class="eyebrow">{lang === 'en' ? 'Legal' : 'Legal'}</span>
+    <h1>{title}</h1>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="max-width:720px">
+    <p class="badge badge-soon">{draftNote}</p>
+    <div class="legal-body">
+      <p style="margin-top:20px">{t('footer.legalEntity')}</p>
+      <p>{t('footer.tagline')}</p>
+      <p class="muted">Lorem ipsum — conteúdo legal a ser fornecido e revisto (ver pendência no plano).</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .legal-body p { margin-bottom: 14px; }
+</style>

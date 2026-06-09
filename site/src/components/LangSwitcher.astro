@@ -1,0 +1,36 @@
+---
+import { languages, getRoute, type Lang, type RouteKey } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  routeKey?: RouteKey;
+}
+const { lang, routeKey } = Astro.props;
+
+// Sem routeKey conhecida, alterna para a home do idioma.
+function hrefFor(target: Lang): string {
+  if (routeKey) return getRoute(routeKey, target);
+  return getRoute('home', target);
+}
+---
+<div class="langsw" aria-label="Idioma">
+  {(Object.keys(languages) as Lang[]).map((l) => (
+    <a
+      href={hrefFor(l)}
+      hreflang={l}
+      class:list={['langsw-opt', { on: l === lang }]}
+      aria-current={l === lang ? 'true' : undefined}
+    >{l.toUpperCase()}</a>
+  ))}
+</div>
+
+<style>
+  .langsw { display: inline-flex; gap: 2px; align-items: center; }
+  .langsw-opt {
+    font-family: var(--font-head); font-size: .74rem; font-weight: 600; letter-spacing: .08em;
+    padding: 5px 8px; border-radius: var(--r-sm); color: rgba(255,255,255,.6);
+    transition: color .15s, background .15s;
+  }
+  .langsw-opt:hover { color: #fff; background: rgba(255,255,255,.1); }
+  .langsw-opt.on { color: var(--g1); }
+</style>

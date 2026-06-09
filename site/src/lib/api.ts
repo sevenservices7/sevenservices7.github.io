@@ -1,0 +1,81 @@
+// Wrappers para chamar as Supabase Edge Functions a partir do browser.
+import { FUNCTIONS_URL, SUPABASE_ANON_KEY } from './config';
+import type { CartItem } from './cart';
+
+async function callFn<T>(name: string, body: unknown): Promise<T> {
+  const res = await fetch(`${FUNCTIONS_URL}/${name}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+    },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const msg = await res.text().catch(() => res.statusText);
+    throw new Error(`${name} falhou (${res.status}): ${msg}`);
+  }
+  return (await res.json()) as T;
+}
+
+export interface CheckoutCustomer {
+  name?: string;
+  email?: string;
+  phone?: string;
+}
+
+/** Cria a sessão de checkout do carrinho e devolve a URL hospedada do Stripe. */
+export function createCartCheckout(input: {
+  items: CartItem[];
+  locale: string;
+  customer?: CheckoutCustomer;
+  unit_slug?: string;
+}): Promise<{ url: string }> {
+  return callFn('create-checkout-session', {
+    mode: 'cart',
+    items: input.items.map((i) => ({ service_code: i.service_code, quantity: i.quantity })),
+    locale: input.locale,
+    customer: input.customer,
+    unit_slug: input.unit_slug,
+  });
+}
+
+export function createBookingCheckout(booking_id: string, locale: string): Promise<{ url: string }> {
+  return callFn('create-checkout-session', { mode: 'booking', booking_id, locale });
+}
+
+export function createBooking(input: {
+  language: string;
+  service_code?: string;
+  slot_start: string;
+  slot_end: string;
+  customer: { name: string; email: string; phone?: string };
+  unit_slug?: string;
+  notes?: string;
+  turnstile_token?: string;
+}): Promise<{ booking_id: string; amount: number }> {
+  return callFn('create-booking', input);
+}
+
+export function getAvailability(input: {
+  from: string;
+  to: string;
+  unit_slug?: string;
+  language?: string;
+}): Promise<{ slots: { start: string; end: string }[] }> {
+  return callFn('get-availability', input);
+}
+
+export function sendLead(input: {
+  name: string;
+  email: string;
+  phone: string;
+  unit_slug?: string;
+  language: string;
+  service_code?: string;
+  message?: string;
+  turnstile_token?: string;
+}): Promise<{ ok: boolean; lead_id?: number }> {
+  return callFn('kommo-lead', { ...input, source: 'website' });
+}

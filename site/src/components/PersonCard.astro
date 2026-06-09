@@ -1,0 +1,37 @@
+---
+import { initials } from '../lib/format';
+import type { TeamMember } from '../lib/data';
+
+interface Props { member: TeamMember; role?: string; languages?: string; langsLabel?: string; phrase?: string; }
+const { member, role, languages, langsLabel, phrase } = Astro.props;
+const roleText = role ?? member.role_label;
+---
+<article class:list={['person card', { founder: member.founder }]}>
+  <div class="person-photo">
+    {member.photo_url ? (
+      <img src={member.photo_url} alt={member.name} loading="lazy" />
+    ) : (
+      <span class="person-initials" aria-hidden="true">{initials(member.name)}</span>
+    )}
+  </div>
+  <h3 class="person-name">{member.name}</h3>
+  <p class="person-role">{roleText}</p>
+  {languages && <p class="person-langs">{langsLabel}: {languages}</p>}
+  {phrase && <p class="person-phrase">{phrase}</p>}
+</article>
+
+<style>
+  .person { padding: 26px 24px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; }
+  .person-photo {
+    width: 104px; height: 104px; border-radius: 50%; overflow: hidden; margin-bottom: 10px;
+    background: var(--grad-navy); display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-md); border: 3px solid var(--g3);
+  }
+  .person-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .person-initials { font-family: var(--font-head); font-weight: 700; font-size: 2rem; color: var(--g1); }
+  .person-name { font-size: 1.12rem; margin: 0; }
+  .person-role { font-size: .9rem; color: var(--t2); margin: 0; }
+  .person-langs { font-family: var(--font-head); font-size: .72rem; text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--g0); margin: 6px 0 0; }
+  .person-phrase { font-size: .9rem; color: var(--seven-muted); line-height: 1.6; margin: 10px 0 0; }
+  .person.founder .person-photo { width: 132px; height: 132px; border-color: var(--g1); }
+</style>

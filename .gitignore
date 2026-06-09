@@ -1,0 +1,16 @@
+# Build output and deps (the site is built by GitHub Actions)
+site/node_modules/
+site/dist/
+site/.astro/
+
+# Brand assets copied at build time from /assets by the site prebuild
+site/public/assets/
+
+# Env / misc
+.env
+.env.*
+*.log
+.DS_Store
+
+# Local Claude session settings
+.claude/settings.local.json

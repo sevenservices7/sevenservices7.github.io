@@ -1,0 +1,20 @@
+{
+  "name": "sevenservices-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Site institucional público da Seven Services (sevens.services).",
+  "scripts": {
+    "prebuild": "node scripts/copy-assets.mjs",
+    "predev": "node scripts/copy-assets.mjs",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@supabase/supabase-js": "^2.45.4",
+    "astro": "^5.5.0"
+  }
+}

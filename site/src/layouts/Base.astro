@@ -1,0 +1,40 @@
+---
+import '../styles/global.css';
+import Seo from '../components/Seo.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import AttendanceForm from '../components/AttendanceForm.astro';
+import { getLangFromUrl, type RouteKey } from '../i18n/ui';
+
+interface Props {
+  title: string;
+  description: string;
+  routeKey?: RouteKey;
+  ogImage?: string;
+  bare?: boolean; // sem header/footer (ex.: páginas de retorno do checkout)
+}
+const { title, description, routeKey, ogImage, bare = false } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0A1C44" />
+    <link rel="icon" type="image/x-icon" href="/assets/logos/favicons/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/logos/favicons/favicon-32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/logos/favicons/apple-touch-icon.png" />
+    <Seo title={title} description={description} lang={lang} routeKey={routeKey} ogImage={ogImage} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Saltar para o conteúdo</a>
+    {!bare && <Header lang={lang} routeKey={routeKey} />}
+    <main id="main">
+      <slot />
+    </main>
+    {!bare && <Footer lang={lang} />}
+    {!bare && <AttendanceForm lang={lang} />}
+  </body>
+</html>

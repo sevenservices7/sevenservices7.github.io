@@ -1,0 +1,34 @@
+---
+import { getRoute, type Lang, type RouteKey } from '../i18n/ui';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Lang;
+  routeKey?: RouteKey;
+  ogImage?: string;
+}
+const { title, description, lang, routeKey, ogImage = '/assets/social/og-image.jpg' } = Astro.props;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://sevenservicess.com';
+const ogLocale = lang === 'pt' ? 'pt_PT' : lang === 'es' ? 'es_ES' : 'en_GB';
+
+// Alternates hreflang quando a rota é conhecida nos 3 idiomas.
+const alternates = routeKey
+  ? (['pt', 'en', 'es'] as Lang[]).map((l) => ({ lang: l, href: site + getRoute(routeKey, l) }))
+  : [];
+---
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={site + Astro.url.pathname} />
+{alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
+{alternates.length > 0 && <link rel="alternate" hreflang="x-default" href={site + getRoute(routeKey!, 'pt')} />}
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={site + ogImage} />
+<meta property="og:locale" content={ogLocale} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={site + ogImage} />

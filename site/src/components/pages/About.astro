@@ -1,0 +1,161 @@
+---
+import { useTranslations, getRoute, type Lang } from '../../i18n/ui';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const copy = {
+  pt: {
+    title: 'Sobre a SEVEN',
+    intro: 'A SEVEN Services nasceu da experiência real de quem viveu os mesmos desafios dos seus clientes.',
+    story: [
+      'Quando chegou a Portugal, o Danilo Jesus enfrentou as mesmas dificuldades que milhares de imigrantes enfrentam todos os dias: burocracia, informações contraditórias, demora nos processos e a sensação de estar sozinho num sistema desconhecido.',
+      'Enquanto muitos ouviam que determinados processos eram impossíveis ou que demorariam anos, o Danilo decidiu procurar as respostas por conta própria. Em pouco tempo organizou toda a sua documentação pessoal — e começou a ajudar familiares, amigos e conhecidos a fazer o mesmo.',
+      'Houve um caso que marcou. Na altura, um estrangeiro ficava proibido de conduzir seis meses após chegar, até ter a carta portuguesa — algo que dependia do título de residência e podia levar anos. «Impossível», diziam todos. O Danilo trocou a carta brasileira pela portuguesa sem título de residência, antes de muita gente que já o tinha. Foi a prova de que o problema não era a lei: era a falta de quem a soubesse ler.',
+      'O que começou como ajuda informal transformou-se numa missão: simplificar a vida dos imigrantes através de informação correta, orientação transparente e acompanhamento próximo.',
+      'Em agosto de 2022 nasceu a SEVEN Services. O escritório começou de forma simples — uma mesa, uma impressora e muita determinação. Em poucos meses já atendia centenas de clientes.',
+      'Hoje a SEVEN Services continua a crescer, com três unidades em Portugal, mas mantém o mesmo princípio que esteve na sua origem: tratar cada cliente da forma como gostaríamos de ter sido tratados quando chegámos a Portugal.',
+    ],
+    missionTitle: 'A nossa missão',
+    mission: [
+      'Tirar o peso da burocracia dos ombros de quem escolheu Portugal para viver.',
+      'Ninguém devia perder o emprego, o sono ou o dinheiro por causa de papelada. O nosso trabalho é simples de dizer e difícil de fazer bem: resolver, com verdade, do princípio ao fim — para que possa concentrar-se na vida, e não nos documentos.',
+    ],
+    beliefsTitle: 'No que acreditamos',
+    beliefsLead: ['Não acreditamos em atalhos.', 'Não acreditamos em jeitinhos.', 'Não prometemos aquilo que não podemos cumprir.'],
+    beliefs: [
+      'Acreditamos que cada cliente merece orientação honesta — mesmo quando isso significa dizer não. Preferimos perder um negócio a colocar alguém em risco com soluções ilegais ou temporárias.',
+      'O nosso compromisso não é vender serviços. É ajudar pessoas a tomar as decisões certas para construir uma vida sólida em Portugal. É por isso que analisamos cada caso individualmente, explicamos os riscos, mostramos as alternativas e acompanhamos os nossos clientes em cada etapa.',
+      'Porque confiança não se conquista com promessas. Conquista-se com transparência, responsabilidade e resultados.',
+    ],
+    workTitle: 'Como trabalhamos',
+    work: [
+      ['Online primeiro. Sem deslocações.', 'Sabemos que não pode faltar ao trabalho para tratar de algo que estamos aqui para resolver. Por isso o nosso foco é o atendimento online: basta pedir, e tratamos de tudo sem que tenha de ir ao escritório. Temos clientes que acompanhámos do NIF até à nacionalidade portuguesa e que nunca vimos pessoalmente — só pela foto do WhatsApp. E quem prefere o presencial tem três unidades à espera.'],
+      ['Entendemos antes de fazer.', 'Muitos clientes chegam a pedir uma coisa quando, na realidade, precisam de outra. Seria fácil vender o que pediram. Não fazemos isso. Ouvimos, diagnosticamos e entregamos aquilo de que precisam de facto.'],
+      ['Cada caso tem um responsável.', 'Não vai contar a sua história a cinco pessoas diferentes nem ficar perdido no meio do processo. Cada caso tem uma pessoa responsável, que o acompanha do primeiro contacto à resolução.'],
+    ],
+  },
+  en: {
+    title: 'About SEVEN',
+    intro: 'SEVEN Services was born from the real experience of someone who lived the same challenges as its clients.',
+    story: [
+      'When he arrived in Portugal, Danilo Jesus faced the same difficulties that thousands of immigrants face every day: bureaucracy, contradictory information, slow processes and the feeling of being alone in an unfamiliar system.',
+      'While many were told that certain processes were impossible or would take years, Danilo decided to find the answers on his own. In a short time he organised all of his personal paperwork — and began helping family, friends and acquaintances do the same.',
+      'One case stood out. Back then, a foreigner was banned from driving for six months after arriving, until they had a Portuguese licence — something that depended on the residence permit and could take years. «Impossible,» everyone said. Danilo exchanged his Brazilian licence for a Portuguese one without a residence permit, before many people who already had one. It was proof that the problem wasn’t the law: it was the lack of someone who knew how to read it.',
+      'What began as informal help became a mission: to simplify immigrants’ lives through correct information, transparent guidance and close support.',
+      'In August 2022, SEVEN Services was born. The office started simply — a desk, a printer and a lot of determination. Within a few months it was already serving hundreds of clients.',
+      'Today SEVEN Services keeps growing, with three locations in Portugal, but it holds to the same principle it began with: to treat each client the way we would have liked to be treated when we arrived in Portugal.',
+    ],
+    missionTitle: 'Our mission',
+    mission: [
+      'To take the weight of bureaucracy off the shoulders of those who chose to live in Portugal.',
+      'No one should lose their job, their sleep or their money over paperwork. Our work is simple to say and hard to do well: to solve it, honestly, from start to finish — so you can focus on your life, not on your documents.',
+    ],
+    beliefsTitle: 'What we believe',
+    beliefsLead: ['We don’t believe in shortcuts.', 'We don’t believe in workarounds.', 'We don’t promise what we can’t deliver.'],
+    beliefs: [
+      'We believe every client deserves honest guidance — even when that means saying no. We would rather lose a deal than put someone at risk with illegal or temporary solutions.',
+      'Our commitment isn’t to sell services. It’s to help people make the right decisions to build a solid life in Portugal. That’s why we analyse each case individually, explain the risks, show the alternatives and support our clients at every step.',
+      'Because trust isn’t won with promises. It’s won with transparency, accountability and results.',
+    ],
+    workTitle: 'How we work',
+    work: [
+      ['Online first. No commuting.', 'We know you can’t take time off work to deal with something we’re here to solve. That’s why our focus is online service: just ask, and we handle everything without you having to come to the office. We have clients we supported from the NIF all the way to Portuguese citizenship and never met in person — only by their WhatsApp photo. And those who prefer in person have three locations waiting.'],
+      ['We understand before we act.', 'Many clients come asking for one thing when, in reality, they need another. It would be easy to sell them what they asked for. We don’t do that. We listen, diagnose and deliver what they actually need.'],
+      ['Every case has an owner.', 'You won’t tell your story to five different people or get lost in the middle of the process. Every case has one person responsible, who accompanies you from the first contact to resolution.'],
+    ],
+  },
+  es: {
+    title: 'Sobre SEVEN',
+    intro: 'SEVEN Services nació de la experiencia real de quien vivió los mismos desafíos que sus clientes.',
+    story: [
+      'Cuando llegó a Portugal, Danilo Jesus enfrentó las mismas dificultades que miles de inmigrantes enfrentan cada día: burocracia, información contradictoria, demoras en los procesos y la sensación de estar solo en un sistema desconocido.',
+      'Mientras muchos escuchaban que ciertos procesos eran imposibles o que tardarían años, Danilo decidió buscar las respuestas por su cuenta. En poco tiempo organizó toda su documentación personal — y empezó a ayudar a familiares, amigos y conocidos a hacer lo mismo.',
+      'Hubo un caso que marcó. En aquel momento, un extranjero tenía prohibido conducir durante seis meses tras llegar, hasta tener el permiso de conducción portugués — algo que dependía del título de residencia y podía llevar años. «Imposible», decían todos. Danilo cambió su permiso brasileño por el portugués sin título de residencia, antes que mucha gente que ya lo tenía. Fue la prueba de que el problema no era la ley: era la falta de quien supiera leerla.',
+      'Lo que empezó como ayuda informal se transformó en una misión: simplificar la vida de los inmigrantes mediante información correcta, orientación transparente y acompañamiento cercano.',
+      'En agosto de 2022 nació SEVEN Services. La oficina empezó de forma sencilla — una mesa, una impresora y mucha determinación. En pocos meses ya atendía a cientos de clientes.',
+      'Hoy SEVEN Services sigue creciendo, con tres sedes en Portugal, pero mantiene el mismo principio que estuvo en su origen: tratar a cada cliente como nos habría gustado que nos trataran cuando llegamos a Portugal.',
+    ],
+    missionTitle: 'Nuestra misión',
+    mission: [
+      'Quitar el peso de la burocracia de los hombros de quienes eligieron Portugal para vivir.',
+      'Nadie debería perder el empleo, el sueño o el dinero por culpa del papeleo. Nuestro trabajo es simple de decir y difícil de hacer bien: resolver, con verdad, de principio a fin — para que pueda concentrarse en la vida, y no en los documentos.',
+    ],
+    beliefsTitle: 'En qué creemos',
+    beliefsLead: ['No creemos en atajos.', 'No creemos en artimañas.', 'No prometemos lo que no podemos cumplir.'],
+    beliefs: [
+      'Creemos que cada cliente merece una orientación honesta — incluso cuando eso significa decir no. Preferimos perder un negocio antes que poner a alguien en riesgo con soluciones ilegales o temporales.',
+      'Nuestro compromiso no es vender servicios. Es ayudar a las personas a tomar las decisiones correctas para construir una vida sólida en Portugal. Por eso analizamos cada caso individualmente, explicamos los riesgos, mostramos las alternativas y acompañamos a nuestros clientes en cada etapa.',
+      'Porque la confianza no se gana con promesas. Se gana con transparencia, responsabilidad y resultados.',
+    ],
+    workTitle: 'Cómo trabajamos',
+    work: [
+      ['Online primero. Sin desplazamientos.', 'Sabemos que no puede faltar al trabajo para tratar algo que estamos aquí para resolver. Por eso nuestro foco es la atención online: solo tiene que pedirlo, y nos ocupamos de todo sin que tenga que ir a la oficina. Tenemos clientes a los que acompañamos del NIF hasta la nacionalidad portuguesa y a quienes nunca vimos en persona — solo por la foto de WhatsApp. Y quien prefiere lo presencial tiene tres sedes esperando.'],
+      ['Entendemos antes de hacer.', 'Muchos clientes llegan pidiendo una cosa cuando, en realidad, necesitan otra. Sería fácil vender lo que pidieron. No lo hacemos. Escuchamos, diagnosticamos y entregamos lo que de verdad necesitan.'],
+      ['Cada caso tiene un responsable.', 'No va a contar su historia a cinco personas diferentes ni quedarse perdido en medio del proceso. Cada caso tiene una persona responsable, que le acompaña del primer contacto a la resolución.'],
+    ],
+  },
+}[lang];
+---
+<section class="bg-navy">
+  <div class="container center" style="max-width:760px">
+    <span class="eyebrow">{t('home.about.eyebrow')}</span>
+    <h1>{copy.title}</h1>
+    <p class="lead" style="margin-inline:auto">{copy.intro}</p>
+  </div>
+</section>
+
+<section>
+  <div class="container prose" style="max-width:760px">
+    {copy.story.map((p) => <p>{p}</p>)}
+  </div>
+</section>
+
+<section class="bg-off">
+  <div class="container" style="max-width:760px">
+    <h2>{copy.missionTitle}</h2>
+    {copy.mission.map((p, i) => <p class:list={['mission-p', { lead: i === 0 }]} style="margin-top:14px">{p}</p>)}
+  </div>
+</section>
+
+<section>
+  <div class="container" style="max-width:760px">
+    <h2>{copy.beliefsTitle}</h2>
+    <div class="beliefs-lead">
+      {copy.beliefsLead.map((l) => <p>{l}</p>)}
+    </div>
+    {copy.beliefs.map((p) => <p class="prose-p">{p}</p>)}
+  </div>
+</section>
+
+<section class="bg-off">
+  <div class="container">
+    <div class="section-head center"><h2>{copy.workTitle}</h2></div>
+    <div class="grid cols-3">
+      {copy.work.map(([title, body]) => (
+        <div class="card work-card">
+          <h3>{title}</h3>
+          <p>{body}</p>
+        </div>
+      ))}
+    </div>
+    <p class="center muted" style="margin-top:32px">{t('footer.legalEntity')}</p>
+  </div>
+</section>
+
+<section class="center">
+  <div class="container">
+    <a href={getRoute('team', lang)} class="btn btn-gold">{t('nav.team')}</a>
+  </div>
+</section>
+
+<style>
+  .prose p, .prose-p { color: var(--seven-ink); line-height: 1.75; margin-bottom: 18px; }
+  .mission-p { color: var(--seven-ink); line-height: 1.7; }
+  .beliefs-lead { margin: 18px 0 24px; }
+  .beliefs-lead p { font-family: var(--font-head); font-style: italic; font-weight: 300; font-size: clamp(1.2rem, 2.4vw, 1.6rem); line-height: 1.3; color: var(--seven-navy-deep); margin: 2px 0; }
+  .work-card { padding: 28px; height: 100%; }
+  .work-card h3 { font-size: 1.12rem; color: var(--seven-navy-deep); margin-bottom: 10px; }
+  .work-card p { color: var(--seven-muted); font-size: .94rem; line-height: 1.65; }
+</style>

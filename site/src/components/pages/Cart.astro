@@ -1,0 +1,122 @@
+---
+import { useTranslations, getRoute, type Lang } from '../../i18n/ui';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const copy = {
+  pt: { title: 'Carrinho', empty: 'O seu carrinho está vazio.', total: 'Total', checkout: 'Pagar com segurança', remove: 'Remover', browse: 'Ver serviços', name: 'Nome', email: 'E-mail', phone: 'Telefone', processing: 'A processar…', error: 'Não foi possível iniciar o pagamento. Tente novamente em breve.' },
+  en: { title: 'Cart', empty: 'Your cart is empty.', total: 'Total', checkout: 'Pay securely', remove: 'Remove', browse: 'Browse services', name: 'Name', email: 'Email', phone: 'Phone', processing: 'Processing…', error: 'Could not start payment. Please try again soon.' },
+  es: { title: 'Carrito', empty: 'Su carrito está vacío.', total: 'Total', checkout: 'Pagar con seguridad', remove: 'Quitar', browse: 'Ver servicios', name: 'Nombre', email: 'Correo', phone: 'Teléfono', processing: 'Procesando…', error: 'No se pudo iniciar el pago. Inténtelo pronto.' },
+}[lang];
+---
+<section class="bg-navy center">
+  <div class="container" style="max-width:680px">
+    <span class="eyebrow">{t('common.cart')}</span>
+    <h1>{copy.title}</h1>
+  </div>
+</section>
+
+<section>
+  <div class="container cart-wrap" data-lang={lang}
+    data-total-label={copy.total} data-remove-label={copy.remove}
+    data-empty={copy.empty} data-browse-href={getRoute('services', lang)} data-browse={copy.browse}
+    data-checkout={copy.checkout} data-processing={copy.processing} data-error={copy.error}>
+    <div data-cart-list></div>
+
+    <div class="cart-side card" data-cart-side hidden>
+      <div class="cart-total"><span>{copy.total}</span> <strong data-cart-total>—</strong></div>
+      <div class="cart-fields">
+        <input data-c-name placeholder={copy.name} autocomplete="name" />
+        <input data-c-email type="email" placeholder={copy.email} autocomplete="email" />
+        <input data-c-phone type="tel" placeholder={copy.phone} autocomplete="tel" />
+      </div>
+      <button class="btn btn-gold btn-block" data-checkout>{copy.checkout}</button>
+      <p class="cart-err" data-cart-err hidden></p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cart-wrap { display: grid; grid-template-columns: 1fr 340px; gap: 28px; align-items: start; }
+  .cart-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px; border: 1px solid var(--b1); border-radius: var(--r-md); margin-bottom: 10px; }
+  .cart-row .qty { display: flex; align-items: center; gap: 8px; }
+  .cart-row button.q { width: 28px; height: 28px; border: 1px solid var(--b2); background: #fff; border-radius: 6px; cursor: pointer; }
+  .cart-empty { padding: 40px; text-align: center; }
+  .cart-side { padding: 22px; position: sticky; top: 88px; }
+  .cart-total { display: flex; justify-content: space-between; font-size: 1.2rem; font-family: var(--font-head); margin-bottom: 16px; }
+  .cart-fields { display: grid; gap: 10px; margin-bottom: 16px; }
+  .cart-fields input { font: inherit; padding: 11px 12px; border: 1px solid var(--b2); border-radius: var(--r-md); background: var(--off); }
+  .cart-err { background: #FEE2E2; color: var(--danger); padding: 10px; border-radius: var(--r-md); font-size: .9rem; }
+  @media (max-width: 760px) { .cart-wrap { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  import { getCart, setQty, removeItem, cartTotal, onCartChange } from '../../lib/cart';
+  import { createCartCheckout } from '../../lib/api';
+  import { money } from '../../lib/format';
+  import type { Lang } from '../../i18n/ui';
+
+  const wrap = document.querySelector('[data-cart-list]')?.parentElement as HTMLElement;
+  const list = document.querySelector('[data-cart-list]') as HTMLElement;
+  const side = document.querySelector('[data-cart-side]') as HTMLElement;
+  const totalEl = document.querySelector('[data-cart-total]') as HTMLElement;
+  const lang = (wrap?.dataset.lang || 'pt') as Lang;
+
+  function render() {
+    const items = getCart();
+    if (!items.length) {
+      side.hidden = true;
+      list.innerHTML = `<div class="cart-empty card"><p>${wrap.dataset.empty}</p><p style="margin-top:14px"><a class="btn btn-ghost" href="${wrap.dataset.browseHref}">${wrap.dataset.browse}</a></p></div>`;
+      return;
+    }
+    side.hidden = false;
+    list.innerHTML = items.map((i) => `
+      <div class="cart-row">
+        <div><strong>${i.name}</strong><br><span class="muted">${money(i.price, lang)}</span></div>
+        <div class="qty">
+          <button class="q" data-dec="${i.service_code}">−</button>
+          <span>${i.quantity}</span>
+          <button class="q" data-inc="${i.service_code}">+</button>
+          <button class="q" data-rm="${i.service_code}" title="${wrap.dataset.removeLabel}">×</button>
+        </div>
+      </div>`).join('');
+    totalEl.textContent = money(cartTotal(), lang);
+
+    list.querySelectorAll('[data-inc]').forEach((b) => b.addEventListener('click', () => {
+      const c = (b as HTMLElement).dataset.inc!; const it = getCart().find((x) => x.service_code === c)!; setQty(c, it.quantity + 1);
+    }));
+    list.querySelectorAll('[data-dec]').forEach((b) => b.addEventListener('click', () => {
+      const c = (b as HTMLElement).dataset.dec!; const it = getCart().find((x) => x.service_code === c)!; setQty(c, it.quantity - 1);
+    }));
+    list.querySelectorAll('[data-rm]').forEach((b) => b.addEventListener('click', () => removeItem((b as HTMLElement).dataset.rm!)));
+  }
+
+  onCartChange(render);
+  render();
+
+  const checkoutBtn = document.querySelector('[data-checkout]') as HTMLButtonElement;
+  const errEl = document.querySelector('[data-cart-err]') as HTMLElement;
+  checkoutBtn?.addEventListener('click', async () => {
+    errEl.hidden = true;
+    checkoutBtn.disabled = true;
+    const label = checkoutBtn.textContent;
+    checkoutBtn.textContent = wrap.dataset.processing!;
+    try {
+      const { url } = await createCartCheckout({
+        items: getCart(),
+        locale: lang,
+        customer: {
+          name: (document.querySelector('[data-c-name]') as HTMLInputElement)?.value,
+          email: (document.querySelector('[data-c-email]') as HTMLInputElement)?.value,
+          phone: (document.querySelector('[data-c-phone]') as HTMLInputElement)?.value,
+        },
+      });
+      window.location.href = url;
+    } catch {
+      errEl.textContent = wrap.dataset.error!; errEl.hidden = false;
+      checkoutBtn.disabled = false; checkoutBtn.textContent = label!;
+    }
+  });
+</script>
