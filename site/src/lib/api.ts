@@ -23,6 +23,7 @@ export interface CheckoutCustomer {
   name?: string;
   email?: string;
   phone?: string;
+  nif?: string;
 }
 
 /** Cria a sessão de checkout do carrinho e devolve a URL hospedada do Stripe. */
@@ -43,6 +44,27 @@ export function createCartCheckout(input: {
 
 export function createBookingCheckout(booking_id: string, locale: string): Promise<{ url: string }> {
   return callFn('create-checkout-session', { mode: 'booking', booking_id, locale });
+}
+
+/**
+ * Cria a sessão de checkout de um único serviço (link de pagamento para WhatsApp).
+ * O preço é sempre resolvido no servidor a partir do `service_code` (nunca do URL).
+ * `kommo_lead_id` opcional: quando o link é enviado a partir de um lead do Kommo,
+ * o webhook marca esse lead como "venda ganha" em vez de criar um novo.
+ */
+export function createSingleCheckout(input: {
+  service_code: string;
+  quantity?: number;
+  locale: string;
+  kommo_lead_id?: string;
+}): Promise<{ url: string }> {
+  return callFn('create-checkout-session', {
+    mode: 'single',
+    service_code: input.service_code,
+    quantity: input.quantity,
+    locale: input.locale,
+    kommo_lead_id: input.kommo_lead_id,
+  });
 }
 
 export function createBooking(input: {

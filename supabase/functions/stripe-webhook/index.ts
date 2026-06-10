@@ -1,6 +1,6 @@
 import Stripe from 'npm:stripe@17';
 import { adminClient, stripeClient } from '../_shared/clients.ts';
-import { createKommoLead } from '../_shared/kommo.ts';
+import { createKommoLead, markKommoLeadWon } from '../_shared/kommo.ts';
 import { createCalendarEvent } from '../_shared/google.ts';
 import { sendEmail, orderEmail, bookingEmail } from '../_shared/email.ts';
 
@@ -51,8 +51,26 @@ async function fulfill(sb: any, session: Stripe.Checkout.Session) {
     if (!order || order.status === 'paid') return;
     await sb.from('orders').update({ status: 'paid', stripe_payment_intent: intent }).eq('id', orderId);
     await sb.from('payments').insert({ order_id: orderId, provider: 'stripe', stripe_session_id: session.id, stripe_payment_intent: intent, payment_method: pm, amount: order.amount_total, status: 'succeeded', raw_event: { id: session.id } });
-    await tryKommo(sb, 'orders', orderId, { name: order.customer_name || 'Cliente', email: order.customer_email, phone: order.customer_phone, unit_slug: order.unit_slug, language: order.locale, source: 'website-checkout' });
-    if (order.customer_email) { const m = orderEmail(order.locale || 'pt', order.amount_total); await sendEmail(order.customer_email, m.subject, m.html).catch(() => {}); }
+    // Dados do cliente: usar os da order (checkout do site) e, em fallback, os
+    // recolhidos pelo Stripe (link WhatsApp, onde a order nasce vazia).
+    const cd = session.customer_details;
+    const email = order.customer_email || cd?.email || '';
+    const kommoLeadId = session.metadata?.kommo_lead_id;
+    if (kommoLeadId) {
+      // Fluxo Kommo: o link saiu de um lead existente → marcar venda ganha (sem criar novo).
+      try { await markKommoLeadWon(Number(kommoLeadId)); await sb.from('orders').update({ kommo_lead_id: Number(kommoLeadId) }).eq('id', orderId); }
+      catch (e) { console.error('kommo won', e); }
+    } else {
+      // Fluxo site: deduplicar contacto e criar lead já como venda ganha.
+      await tryKommo(sb, 'orders', orderId, {
+        name: order.customer_name || cd?.name || 'Cliente',
+        email,
+        phone: order.customer_phone || cd?.phone || '',
+        nif: order.customer_nif || customField(session, 'nif'),
+        unit_slug: order.unit_slug, language: order.locale, source: 'website-checkout', won: true,
+      });
+    }
+    if (email) { const m = orderEmail(order.locale || 'pt', order.amount_total); await sendEmail(email, m.subject, m.html).catch(() => {}); }
   } else if (bookingId) {
     const { data: booking } = await sb.from('bookings').select('*').eq('id', bookingId).single();
     if (!booking || booking.status === 'confirmed') return;
@@ -65,6 +83,11 @@ async function fulfill(sb: any, session: Stripe.Checkout.Session) {
     await tryKommo(sb, 'bookings', bookingId, { name: booking.customer_name, email: booking.customer_email, phone: booking.customer_phone, unit_slug: booking.unit_slug, language: booking.language, service_code: booking.service_code, source: 'website-booking' });
     if (booking.customer_email) { const m = bookingEmail(booking.language || 'pt', booking.slot_start); await sendEmail(booking.customer_email, m.subject, m.html).catch(() => {}); }
   }
+}
+
+function customField(session: Stripe.Checkout.Session, key: string): string {
+  const f = (session.custom_fields || []).find((x: any) => x.key === key);
+  return (f as any)?.text?.value || '';
 }
 
 async function tryKommo(sb: any, table: string, id: string, lead: any) {

@@ -6,9 +6,9 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 
 const copy = {
-  pt: { title: 'Carrinho', empty: 'O seu carrinho está vazio.', total: 'Total', checkout: 'Pagar com segurança', remove: 'Remover', browse: 'Ver serviços', name: 'Nome', email: 'E-mail', phone: 'Telefone', processing: 'A processar…', error: 'Não foi possível iniciar o pagamento. Tente novamente em breve.' },
-  en: { title: 'Cart', empty: 'Your cart is empty.', total: 'Total', checkout: 'Pay securely', remove: 'Remove', browse: 'Browse services', name: 'Name', email: 'Email', phone: 'Phone', processing: 'Processing…', error: 'Could not start payment. Please try again soon.' },
-  es: { title: 'Carrito', empty: 'Su carrito está vacío.', total: 'Total', checkout: 'Pagar con seguridad', remove: 'Quitar', browse: 'Ver servicios', name: 'Nombre', email: 'Correo', phone: 'Teléfono', processing: 'Procesando…', error: 'No se pudo iniciar el pago. Inténtelo pronto.' },
+  pt: { title: 'Carrinho', empty: 'O seu carrinho está vazio.', total: 'Total', checkout: 'Pagar com segurança', remove: 'Remover', browse: 'Ver serviços', name: 'Nome completo', email: 'E-mail', phone: 'Telemóvel', nif: 'NIF (opcional)', processing: 'A processar…', error: 'Não foi possível iniciar o pagamento. Tente novamente em breve.', errName: 'Indique o nome completo.', errEmail: 'Indique um e-mail válido.', errPhone: 'Indique um número de telemóvel válido.' },
+  en: { title: 'Cart', empty: 'Your cart is empty.', total: 'Total', checkout: 'Pay securely', remove: 'Remove', browse: 'Browse services', name: 'Full name', email: 'Email', phone: 'Mobile', nif: 'Tax ID (optional)', processing: 'Processing…', error: 'Could not start payment. Please try again soon.', errName: 'Please enter your full name.', errEmail: 'Please enter a valid email.', errPhone: 'Please enter a valid mobile number.' },
+  es: { title: 'Carrito', empty: 'Su carrito está vacío.', total: 'Total', checkout: 'Pagar con seguridad', remove: 'Quitar', browse: 'Ver servicios', name: 'Nombre completo', email: 'Correo', phone: 'Móvil', nif: 'NIF (opcional)', processing: 'Procesando…', error: 'No se pudo iniciar el pago. Inténtelo pronto.', errName: 'Indique su nombre completo.', errEmail: 'Indique un correo válido.', errPhone: 'Indique un número de móvil válido.' },
 }[lang];
 ---
 <section class="bg-navy center">
@@ -22,20 +22,26 @@ const copy = {
   <div class="container cart-wrap" data-lang={lang}
     data-total-label={copy.total} data-remove-label={copy.remove}
     data-empty={copy.empty} data-browse-href={getRoute('services', lang)} data-browse={copy.browse}
-    data-checkout={copy.checkout} data-processing={copy.processing} data-error={copy.error}>
+    data-checkout={copy.checkout} data-processing={copy.processing} data-error={copy.error}
+    data-err-name={copy.errName} data-err-email={copy.errEmail} data-err-phone={copy.errPhone}>
     <div data-cart-list></div>
 
     <div class="cart-side card" data-cart-side hidden>
       <div class="cart-total"><span>{copy.total}</span> <strong data-cart-total>—</strong></div>
       <div class="cart-fields">
-        <input data-c-name placeholder={copy.name} autocomplete="name" />
-        <input data-c-email type="email" placeholder={copy.email} autocomplete="email" />
-        <input data-c-phone type="tel" placeholder={copy.phone} autocomplete="tel" />
+        <input data-c-name placeholder={copy.name} autocomplete="name" required />
+        <input data-c-email type="email" placeholder={copy.email} autocomplete="email" required />
+        <input data-c-phone type="tel" placeholder={copy.phone} autocomplete="tel" required />
+        <input data-c-nif placeholder={copy.nif} autocomplete="off" inputmode="numeric" />
       </div>
       <button class="btn btn-gold btn-block" data-checkout>{copy.checkout}</button>
       <p class="cart-err" data-cart-err hidden></p>
     </div>
   </div>
+
+  {/* intl-tel-input (CDN): seletor de país pesquisável + formato/validação por país (libphonenumber). */}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.8.0/build/css/intlTelInput.css" />
+  <script is:inline src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.8.0/build/js/intlTelInputWithUtils.min.js"></script>
 </section>
 
 <style>
@@ -47,7 +53,10 @@ const copy = {
   .cart-side { padding: 22px; position: sticky; top: 88px; }
   .cart-total { display: flex; justify-content: space-between; font-size: 1.2rem; font-family: var(--font-head); margin-bottom: 16px; }
   .cart-fields { display: grid; gap: 10px; margin-bottom: 16px; }
-  .cart-fields input { font: inherit; padding: 11px 12px; border: 1px solid var(--b2); border-radius: var(--r-md); background: var(--off); }
+  .cart-fields input { font: inherit; padding: 11px 12px; border: 1px solid var(--b2); border-radius: var(--r-md); background: var(--off); width: 100%; }
+  .cart-fields input.invalid { border-color: var(--danger); }
+  /* intl-tel-input ocupa toda a largura e mantém o estilo do input. */
+  .cart-fields .iti { display: block; width: 100%; }
   .cart-err { background: #FEE2E2; color: var(--danger); padding: 10px; border-radius: var(--r-md); font-size: .9rem; }
   @media (max-width: 760px) { .cart-wrap { grid-template-columns: 1fr; } }
 </style>
@@ -96,10 +105,45 @@ const copy = {
   onCartChange(render);
   render();
 
+  const nameEl = document.querySelector('[data-c-name]') as HTMLInputElement;
+  const emailEl = document.querySelector('[data-c-email]') as HTMLInputElement;
+  const phoneEl = document.querySelector('[data-c-phone]') as HTMLInputElement;
+  const nifEl = document.querySelector('[data-c-nif]') as HTMLInputElement;
+
+  // Seletor de país pesquisável + formato/validação por país. Ao escolher o DDI,
+  // o input segue o padrão nacional desse país (PT 912 345 678, BR (11) 91234-5678).
+  // O número é guardado em E.164 (ex.: +5511912345678). Degrada para tel simples se o CDN falhar.
+  const iti = (window as any).intlTelInput
+    ? (window as any).intlTelInput(phoneEl, {
+        initialCountry: 'pt',
+        separateDialCode: true,
+        autoPlaceholder: 'aggressive',
+        countrySearch: true,
+      })
+    : null;
+  // Normaliza para o formato nacional quando o utilizador termina de escrever.
+  if (iti) phoneEl.addEventListener('blur', () => { if (iti.isValidNumber()) iti.setNumber(iti.getNumber()); });
+
+  function clearInvalid() { [nameEl, emailEl, phoneEl].forEach((el) => el?.classList.remove('invalid')); }
+  function fail(el: HTMLInputElement, msg: string) {
+    el.classList.add('invalid');
+    errEl.textContent = msg; errEl.hidden = false;
+    el.focus();
+    return false;
+  }
+  function validate(): boolean {
+    clearInvalid();
+    if (!nameEl.value.trim() || nameEl.value.trim().split(/\s+/).length < 2) return fail(nameEl, wrap.dataset.errName!);
+    if (!emailEl.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim())) return fail(emailEl, wrap.dataset.errEmail!);
+    if (!phoneEl.value.trim() || (iti && !iti.isValidNumber())) return fail(phoneEl, wrap.dataset.errPhone!);
+    return true;
+  }
+
   const checkoutBtn = document.querySelector('[data-checkout]') as HTMLButtonElement;
   const errEl = document.querySelector('[data-cart-err]') as HTMLElement;
   checkoutBtn?.addEventListener('click', async () => {
     errEl.hidden = true;
+    if (!validate()) return;
     checkoutBtn.disabled = true;
     const label = checkoutBtn.textContent;
     checkoutBtn.textContent = wrap.dataset.processing!;
@@ -108,9 +152,10 @@ const copy = {
         items: getCart(),
         locale: lang,
         customer: {
-          name: (document.querySelector('[data-c-name]') as HTMLInputElement)?.value,
-          email: (document.querySelector('[data-c-email]') as HTMLInputElement)?.value,
-          phone: (document.querySelector('[data-c-phone]') as HTMLInputElement)?.value,
+          name: nameEl.value.trim(),
+          email: emailEl.value.trim(),
+          phone: iti ? iti.getNumber() : phoneEl.value.trim(),
+          nif: nifEl.value.trim(),
         },
       });
       window.location.href = url;
