@@ -42,19 +42,20 @@ const label = service.price_label || (service.price != null ? money(service.pric
     align-self: flex-start; font-family: var(--font-head); font-size: .66rem; font-weight: 600;
     letter-spacing: var(--tracking-wider); text-transform: uppercase; color: var(--g0);
   }
-  .svc-name { font-family: var(--font-head); font-weight: 500; font-size: 1.15rem; line-height: 1.2; color: var(--seven-navy-deep); }
+  .svc-name { font-family: var(--font-head); font-weight: 500; font-size: 1.15rem; line-height: 1.2; color: var(--seven-navy-deep); overflow-wrap: anywhere; }
   .svc-obs { font-size: .8rem; color: var(--seven-muted); line-height: 1.45; margin: 0; }
   .svc-consult { font-size: .78rem; color: var(--g0); line-height: 1.45; margin: 0; padding: 8px 10px; background: rgba(193,154,90,.10); border: 1px solid rgba(193,154,90,.25); border-radius: 8px; }
-  .svc-foot { margin-top: auto; padding-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .svc-foot { margin-top: auto; padding-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; }
   .svc-price { font-family: var(--font-head); font-weight: 700; color: var(--seven-navy-deep); font-size: 1.02rem; white-space: nowrap; }
 
-  /* Variante compacta (destaques) */
-  .svc-compact { padding: 16px 18px; gap: 7px; border-radius: 12px; }
+  /* Variante compacta (destaques): teaser limpo, botão à largura toda, sem transbordo */
+  .svc-compact { padding: 16px 18px; gap: 6px; border-radius: 12px; }
   .svc-compact .svc-fam { font-size: .6rem; }
-  .svc-compact .svc-name { font-size: .98rem; }
-  .svc-compact .svc-obs, .svc-compact .svc-consult { font-size: .72rem; }
-  .svc-compact .svc-foot { padding-top: 8px; }
-  .svc-compact .svc-price { font-size: .92rem; }
+  .svc-compact .svc-name { font-size: .96rem; }
+  .svc-compact .svc-obs, .svc-compact .svc-consult { display: none; }
+  .svc-compact .svc-foot { flex-direction: column; align-items: stretch; gap: 9px; padding-top: 12px; }
+  .svc-compact .svc-price { font-size: .95rem; }
+  .svc-compact .svc-foot .btn { width: 100%; text-align: center; justify-content: center; white-space: normal; line-height: 1.2; }
 </style>
 
 <script>
