@@ -3,8 +3,8 @@ import { useTranslations, getRoute, type Lang } from '../i18n/ui';
 import { money, localName, familyLabel } from '../lib/format';
 import type { Service } from '../lib/data';
 
-interface Props { service: Service; lang: Lang; compact?: boolean; }
-const { service, lang, compact = false } = Astro.props;
+interface Props { service: Service; lang: Lang; compact?: boolean; mini?: boolean; }
+const { service, lang, compact = false, mini = false } = Astro.props;
 const t = useTranslations(lang);
 
 const displayName = localName(service, lang);
@@ -13,19 +13,31 @@ const needsConsult = service.requires_consultation === true || service.action ==
 const canAdd = !needsConsult && service.price != null && service.price > 0;
 const label = service.price_label || (service.price != null ? money(service.price, lang) : '—');
 ---
-<article class:list={['svc', { 'svc-compact': compact }]}>
-  {service.family && <span class="svc-fam">{famLabel}</span>}
+<article class:list={['svc', { 'svc-compact': compact || mini, 'svc-mini': mini }]}>
+  {!mini && service.family && <span class="svc-fam">{famLabel}</span>}
   <h3 class="svc-name">{displayName}</h3>
-  {service.price_obs && <p class="svc-obs">{service.price_obs}</p>}
-  {needsConsult && <p class="svc-consult">{t('services.consultNote')}</p>}
+  {!mini && service.price_obs && <p class="svc-obs">{service.price_obs}</p>}
+  {!mini && needsConsult && <p class="svc-consult">{t('services.consultNote')}</p>}
   <div class="svc-foot">
     <span class="svc-price">{label}</span>
     {needsConsult ? (
-      <a href={getRoute('booking', lang)} class="btn btn-gold btn-sm">{t('nav.booking')}</a>
+      mini ? (
+        <a class="svc-ic" href={getRoute('booking', lang)} aria-label={t('nav.booking')} title={t('nav.booking')}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><line x1="16" y1="2.5" x2="16" y2="6.5"/><line x1="8" y1="2.5" x2="8" y2="6.5"/><line x1="3" y1="9.5" x2="21" y2="9.5"/></svg>
+        </a>
+      ) : (
+        <a href={getRoute('booking', lang)} class="btn btn-gold btn-sm">{t('nav.booking')}</a>
+      )
     ) : canAdd ? (
-      <button class="btn btn-gold btn-sm" data-add data-code={service.code} data-pname={displayName} data-price={service.price}>
-        {t('common.addToCart')}
-      </button>
+      mini ? (
+        <button class="svc-ic" data-add data-code={service.code} data-pname={displayName} data-price={service.price} aria-label={t('common.addToCart')} title={t('common.addToCart')}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      ) : (
+        <button class="btn btn-gold btn-sm" data-add data-code={service.code} data-pname={displayName} data-price={service.price}>
+          {t('common.addToCart')}
+        </button>
+      )
     ) : null}
   </div>
 </article>
@@ -48,14 +60,31 @@ const label = service.price_label || (service.price != null ? money(service.pric
   .svc-foot { margin-top: auto; padding-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; }
   .svc-price { font-family: var(--font-head); font-weight: 700; color: var(--seven-navy-deep); font-size: 1.02rem; white-space: nowrap; }
 
-  /* Variante compacta (destaques): teaser limpo, botão à largura toda, sem transbordo */
-  .svc-compact { padding: 16px 18px; gap: 6px; border-radius: 12px; }
-  .svc-compact .svc-fam { font-size: .6rem; }
-  .svc-compact .svc-name { font-size: .96rem; }
-  .svc-compact .svc-obs, .svc-compact .svc-consult { display: none; }
-  .svc-compact .svc-foot { flex-direction: column; align-items: stretch; gap: 9px; padding-top: 12px; }
-  .svc-compact .svc-price { font-size: .95rem; }
-  .svc-compact .svc-foot .btn { width: 100%; text-align: center; justify-content: center; white-space: normal; line-height: 1.2; }
+  /* Variante compacta (não-mini, p.ex. variantes de grupo) */
+  .svc-compact:not(.svc-mini) { padding: 16px 18px; gap: 6px; border-radius: 12px; }
+  .svc-compact:not(.svc-mini) .svc-name { font-size: .96rem; }
+  .svc-compact:not(.svc-mini) .svc-obs, .svc-compact:not(.svc-mini) .svc-consult { display: none; }
+  .svc-compact:not(.svc-mini) .svc-foot { flex-direction: column; align-items: stretch; gap: 9px; padding-top: 12px; }
+  .svc-compact:not(.svc-mini) .svc-price { font-size: .95rem; }
+  .svc-compact:not(.svc-mini) .svc-foot .btn { width: 100%; text-align: center; justify-content: center; white-space: normal; line-height: 1.2; }
+
+  /* Variante MINI (destaques): card mínimo, botão só ícone */
+  .svc-mini { padding: 13px 15px; gap: 6px; border-radius: 12px; }
+  .svc-mini .svc-name {
+    font-size: .9rem; line-height: 1.25; min-height: 2.25em;
+    display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .svc-mini .svc-foot { flex-wrap: nowrap; padding-top: 8px; gap: 8px; }
+  .svc-mini .svc-price { font-size: .9rem; }
+  .svc-ic {
+    flex: none; width: 36px; height: 36px; border-radius: 999px; border: 0; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--g1); color: var(--seven-navy-deep);
+    transition: transform var(--dur-fast) var(--ease-out), filter var(--dur-fast) var(--ease-out);
+  }
+  .svc-ic:hover { filter: brightness(1.06); transform: translateY(-1px); }
+  .svc-ic svg { width: 18px; height: 18px; }
+  .svc-ic.is-added { background: #2e7d57; color: #fff; }
 </style>
 
 <script>
@@ -64,9 +93,10 @@ const label = service.price_label || (service.price != null ? money(service.pric
     btn.addEventListener('click', () => {
       const el = btn as HTMLElement;
       addItem({ service_code: el.dataset.code || '', name: el.dataset.pname || '', price: Number(el.dataset.price || 0) });
-      const original = el.textContent;
-      el.textContent = '✓';
-      setTimeout(() => { el.textContent = original; }, 1100);
+      const original = el.innerHTML;
+      el.innerHTML = '✓';
+      el.classList.add('is-added');
+      setTimeout(() => { el.innerHTML = original; el.classList.remove('is-added'); }, 1100);
     });
   });
 </script>
