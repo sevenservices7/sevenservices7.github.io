@@ -1,0 +1,21 @@
+const FROM = Deno.env.get('EMAIL_FROM') || 'Seven Services <noreply@sevens.services>';
+export async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
+  const key = Deno.env.get('RESEND_API_KEY');
+  if (!key || !to) return false;
+  const res = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ from: FROM, to, subject, html }) });
+  if (!res.ok) { console.error('resend', await res.text().catch(() => '')); return false; }
+  return true;
+}
+export function orderEmail(locale: string, amount: number): { subject: string; html: string } {
+  const eur = `€${Number(amount).toFixed(2)}`;
+  if (locale === 'en') return { subject: 'Your Seven Services payment', html: `<p>Thank you! We received your payment of <b>${eur}</b>.</p><p>Our team will be in touch shortly.</p>` };
+  if (locale === 'es') return { subject: 'Su pago en Seven Services', html: `<p>¡Gracias! Recibimos su pago de <b>${eur}</b>.</p><p>Nuestro equipo se pondrá en contacto pronto.</p>` };
+  return { subject: 'O seu pagamento na Seven Services', html: `<p>Obrigado! Recebemos o seu pagamento de <b>${eur}</b>.</p><p>A nossa equipa entrará em contacto em breve.</p>` };
+}
+export function bookingEmail(locale: string, startsAt: string): { subject: string; html: string } {
+  const loc = locale === 'en' ? 'en-GB' : locale === 'es' ? 'es-ES' : 'pt-PT';
+  const fmt = new Date(startsAt).toLocaleString(loc, { dateStyle: 'full', timeStyle: 'short' });
+  if (locale === 'en') return { subject: 'Your consultation is confirmed', html: `<p>Your consultation is confirmed for <b>${fmt}</b>.</p><p>We look forward to speaking with you.</p>` };
+  if (locale === 'es') return { subject: 'Su consultoría está confirmada', html: `<p>Su consultoría está confirmada para <b>${fmt}</b>.</p><p>Le esperamos.</p>` };
+  return { subject: 'A sua consultoria está confirmada', html: `<p>A sua consultoria está confirmada para <b>${fmt}</b>.</p><p>Até breve!</p>` };
+}

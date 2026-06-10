@@ -1,0 +1,79 @@
+---
+import { getRoute, type Lang } from '../../i18n/ui';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+
+const copy = {
+  pt: {
+    preparing: 'A preparar o pagamento seguro…',
+    redirecting: 'Vai ser reencaminhado para o Stripe.',
+    errorTitle: 'Link inválido',
+    errorBody: 'Este link de pagamento não é válido ou o serviço já não está disponível. Contacte-nos para obter um novo link.',
+    services: 'Ver serviços',
+  },
+  en: {
+    preparing: 'Preparing secure payment…',
+    redirecting: 'You will be redirected to Stripe.',
+    errorTitle: 'Invalid link',
+    errorBody: 'This payment link is not valid or the service is no longer available. Contact us for a new link.',
+    services: 'Browse services',
+  },
+  es: {
+    preparing: 'Preparando el pago seguro…',
+    redirecting: 'Será redirigido a Stripe.',
+    errorTitle: 'Enlace no válido',
+    errorBody: 'Este enlace de pago no es válido o el servicio ya no está disponible. Contáctenos para un nuevo enlace.',
+    services: 'Ver servicios',
+  },
+}[lang];
+---
+<section class="bg-navy" style="min-height:60vh;display:flex;align-items:center"
+  data-pay data-lang={lang} data-services-href={getRoute('services', lang)}
+  data-preparing={copy.preparing} data-error-title={copy.errorTitle} data-error-body={copy.errorBody} data-services={copy.services}>
+  <div class="container center" style="max-width:600px">
+    <div class="pay-spin" data-pay-spin></div>
+    <h1 data-pay-title>{copy.preparing}</h1>
+    <p class="lead" style="margin-inline:auto" data-pay-body>{copy.redirecting}</p>
+    <div data-pay-actions style="margin-top:26px;display:none;justify-content:center">
+      <a href={getRoute('services', lang)} class="btn btn-gold">{copy.services}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pay-spin {
+    width: 54px; height: 54px; border-radius: 50%; margin: 0 auto 22px;
+    border: 4px solid var(--b2); border-top-color: var(--g1); animation: pay-spin 0.8s linear infinite;
+  }
+  @keyframes pay-spin { to { transform: rotate(360deg); } }
+</style>
+
+<script>
+  import { createSingleCheckout } from '../../lib/api';
+  import type { Lang } from '../../i18n/ui';
+
+  const root = document.querySelector('[data-pay]') as HTMLElement;
+  const lang = (root.dataset.lang || 'pt') as Lang;
+  const params = new URLSearchParams(location.search);
+  const serv = params.get('serv') || params.get('service') || '';
+  const qty = Number(params.get('qty') || '1') || 1;
+  const lead = params.get('lead') || undefined;
+
+  function showError() {
+    (document.querySelector('[data-pay-spin]') as HTMLElement).style.display = 'none';
+    (document.querySelector('[data-pay-title]') as HTMLElement).textContent = root.dataset.errorTitle!;
+    (document.querySelector('[data-pay-body]') as HTMLElement).textContent = root.dataset.errorBody!;
+    (document.querySelector('[data-pay-actions]') as HTMLElement).style.display = 'flex';
+  }
+
+  (async () => {
+    if (!serv) { showError(); return; }
+    try {
+      const { url } = await createSingleCheckout({ service_code: serv, quantity: qty, locale: lang, kommo_lead_id: lead });
+      window.location.href = url;
+    } catch {
+      showError();
+    }
+  })();
+</script>
