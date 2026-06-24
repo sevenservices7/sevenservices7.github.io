@@ -28,6 +28,7 @@ export const ROUTES = {
   about: { pt: '/sobre', en: '/en/about', es: '/es/sobre' },
   team: { pt: '/equipa', en: '/en/team', es: '/es/equipo' },
   services: { pt: '/servicos', en: '/en/services', es: '/es/servicios' },
+  legalization: { pt: '/legalizacao-de-veiculos', en: '/en/vehicle-legalization', es: '/es/legalizacion-de-vehiculos' },
   booking: { pt: '/agendamento', en: '/en/booking', es: '/es/agenda' },
   contact: { pt: '/contato', en: '/en/contact', es: '/es/contacto' },
   cart: { pt: '/carrinho', en: '/en/cart', es: '/es/carrito' },

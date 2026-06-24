@@ -1,0 +1,9 @@
+---
+import Base from '../layouts/Base.astro';
+import VehicleLegalization from '../components/pages/VehicleLegalization.astro';
+import { useTranslations } from '../i18n/ui';
+const t = useTranslations('pt');
+---
+<Base title={`${t('legalization.metaTitle')} — ${t('site.name')}`} description={t('legalization.metaDesc')} routeKey="legalization">
+  <VehicleLegalization lang="pt" />
+</Base>
