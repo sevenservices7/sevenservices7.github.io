@@ -8,8 +8,12 @@
   "nav.team": "Equipo",
   "nav.units": "Sedes",
   "nav.services": "Servicios",
+  "nav.legalization": "Vehículos",
   "nav.booking": "Agendar consultoría",
   "nav.contact": "Contacto",
+
+  "legalization.metaTitle": "Legalización de Vehículos en Portugal",
+  "legalization.metaDesc": "¿Importó un coche a Portugal? Nos ocupamos de toda la legalización — simulación del ISV, inspección, despacho aduanero, matrícula en el IMT y registro de propiedad. De principio a fin.",
 
   "common.whatsapp": "WhatsApp",
   "common.viewUnit": "Ver sede",
