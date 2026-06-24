@@ -1,5 +1,5 @@
 ---
-import { useTranslations, getRoute, type Lang } from '../../i18n/ui';
+import { useTranslations, type Lang } from '../../i18n/ui';
 import { getOffices } from '../../lib/data';
 import WhatsAppButton from '../WhatsAppButton.astro';
 
@@ -247,8 +247,9 @@ const copy = {
     <p class="hero-lede">{copy.heroLede}</p>
     <div class="hero-ctas">
       <button class="btn btn-gold" data-open-attendance>{copy.heroCtaPrimary}</button>
-      <a href="#como-funciona" class="btn btn-light">{copy.heroCtaSecondary}</a>
+      <WhatsAppButton whatsapp={waNumber} text={copy.waText} label={t('common.whatsapp')} />
     </div>
+    <a href="#como-funciona" class="hero-link">{copy.heroCtaSecondary}</a>
   </div>
   <div class="hero-mark" aria-hidden="true"></div>
 </section>
@@ -376,7 +377,6 @@ const copy = {
     <div class="cta-actions">
       <button class="btn btn-gold" data-open-attendance>{copy.ctaPrimary}</button>
       <WhatsAppButton whatsapp={waNumber} text={copy.waText} label={t('common.whatsapp')} />
-      <a href={getRoute('booking', lang)} class="btn btn-light">{copy.ctaBooking}</a>
     </div>
   </div>
 </section>
@@ -389,6 +389,8 @@ const copy = {
   .hero h1 em { font-style: italic; font-weight: 300; color: var(--g1); }
   .hero-lede { color: rgba(255,255,255,.8); max-width: 600px; font-size: clamp(1.05rem, 1.6vw, 1.2rem); margin: 24px 0 36px; line-height: 1.55; }
   .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+  .hero-link { display: inline-block; margin-top: 20px; color: rgba(255,255,255,.75); font-family: var(--font-head); font-weight: 500; font-size: .82rem; text-transform: uppercase; letter-spacing: var(--tracking-wide); border-bottom: 1px solid rgba(255,255,255,.3); padding-bottom: 2px; transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
+  .hero-link:hover { color: var(--g1); border-color: var(--g1); }
   .hero-mark {
     position: absolute; right: -90px; bottom: -90px; width: min(620px, 70vw); height: min(620px, 70vw);
     background: url('/brand/logo_isotype_white_gold.png') center/contain no-repeat; opacity: .2;
