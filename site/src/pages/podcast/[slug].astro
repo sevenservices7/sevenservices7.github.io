@@ -45,7 +45,7 @@ const videoLd = {
     <header class="pg-hero ep-head">
       <div class="container" style="max-width:960px">
         <nav aria-label="Você está em"><ol class="crumbs"><li><a href="/">Início</a></li><li><a href="/podcast">SEVEN Cast</a></li></ol></nav>
-        <span class="eyebrow">{d.episode ? `Episódio ${d.episode}` : 'SEVEN Cast'}</span>
+        <span class="eyebrow">{d.episode !== undefined ? `Episódio ${String(d.episode).padStart(2, '0')}` : 'SEVEN Cast'}</span>
         <h1>{d.title}</h1>
         <p class="lede">{d.description}</p>
         <p class="meta-line">

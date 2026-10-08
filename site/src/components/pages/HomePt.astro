@@ -146,7 +146,7 @@ const testimonials = [
       {episodes.length > 0 && (
         <div class="link-cards">
           {episodes.map((e) => (
-            <a href={`/podcast/${e.id}`} class="link-card"><span class="meta-line">{e.data.episode ? `Episódio ${e.data.episode}` : 'Episódio'}</span><h3>{e.data.title}</h3><p>{e.data.description}</p><span class="go">Assistir</span></a>
+            <a href={`/podcast/${e.id}`} class="link-card"><span class="meta-line">{e.data.episode !== undefined ? `Episódio ${String(e.data.episode).padStart(2, '0')}` : 'Episódio'}</span><h3>{e.data.title}</h3><p>{e.data.description}</p><span class="go">Assistir</span></a>
           ))}
         </div>
       )}

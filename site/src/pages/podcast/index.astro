@@ -38,7 +38,7 @@ const dateFmt = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'long'
             <a href={`/podcast/${e.id}`} class="ep">
               <img src={`https://i.ytimg.com/vi/${e.data.youtubeId}/hqdefault.jpg`} alt="" loading="lazy" width="480" height="360" />
               <div>
-                <span class="meta-line">{e.data.episode ? `Episódio ${e.data.episode} · ` : ''}{dateFmt.format(e.data.pubDate)}{e.data.duration ? ` · ${e.data.duration}` : ''}</span>
+                <span class="meta-line">{e.data.episode !== undefined ? `Episódio ${String(e.data.episode).padStart(2, '0')} · ` : ''}{dateFmt.format(e.data.pubDate)}{e.data.duration ? ` · ${e.data.duration}` : ''}</span>
                 <h2>{e.data.title}</h2>
                 <p>{e.data.description}</p>
               </div>
@@ -59,7 +59,7 @@ const dateFmt = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'long'
 <style>
   .eps { display: flex; flex-direction: column; border-top: 1px solid var(--border-strong); }
   .ep { display: grid; grid-template-columns: 280px 1fr; gap: 28px; padding: 28px 0; border-bottom: 1px solid var(--border-strong); align-items: center; }
-  .ep img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+  .ep img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: var(--oceano); }
   .ep h2 { font-size: clamp(1.2rem, 2.2vw, 1.5rem); margin: 8px 0; }
   .ep p { color: var(--ink-muted); }
   .ep:hover h2 { text-decoration: underline; text-underline-offset: 4px; }
