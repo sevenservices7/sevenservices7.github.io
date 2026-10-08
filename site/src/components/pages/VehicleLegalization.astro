@@ -385,16 +385,16 @@ const copy = {
   /* HERO (replicado de Home.astro p/ consistência) */
   .hero { position: relative; overflow: hidden; padding: clamp(72px, 11vw, 120px) 0; }
   .hero-in { position: relative; z-index: 1; }
-  .hero h1 { font-size: clamp(2.6rem, 6vw, 4.75rem); line-height: 1.04; letter-spacing: -0.015em; max-width: 16ch; text-wrap: balance; }
-  .hero h1 em { font-style: italic; font-weight: 300; color: var(--g1); }
-  .hero-lede { color: rgba(255,255,255,.8); max-width: 600px; font-size: clamp(1.05rem, 1.6vw, 1.2rem); margin: 24px 0 36px; line-height: 1.55; }
+  .hero h1 { font-weight: 700; font-size: clamp(2.4rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacing: -0.01em; max-width: 16ch; text-wrap: balance; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero-lede { color: var(--nevoa); max-width: 600px; font-size: clamp(1.05rem, 1.6vw, 1.2rem); margin: 24px 0 36px; line-height: 1.55; }
   .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
-  .hero-link { display: inline-block; margin-top: 20px; color: rgba(255,255,255,.75); font-family: var(--font-head); font-weight: 500; font-size: .82rem; text-transform: uppercase; letter-spacing: var(--tracking-wide); border-bottom: 1px solid rgba(255,255,255,.3); padding-bottom: 2px; transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
-  .hero-link:hover { color: var(--g1); border-color: var(--g1); }
+  .hero-link { display: inline-block; margin-top: 20px; color: var(--nevoa); font-family: var(--font-head); font-weight: 500; font-size: 13px; text-transform: uppercase; letter-spacing: 0.12em; border-bottom: 1px solid var(--complementar-2); padding-bottom: 2px; transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
+  .hero-link:hover { color: var(--accent); border-color: var(--accent); }
   .hero-mark {
-    position: absolute; right: -90px; bottom: -90px; width: min(620px, 70vw); height: min(620px, 70vw);
-    background: url('/brand/logo_isotype_white_gold.png') center/contain no-repeat; opacity: .2;
-    pointer-events: none; filter: drop-shadow(0 20px 60px rgba(0,0,0,.35));
+    position: absolute; right: -60px; bottom: -80px; width: min(560px, 62vw); height: min(560px, 62vw);
+    background: url('/brand/seven-simbolo-areia.svg') center/contain no-repeat; opacity: .14;
+    pointer-events: none;
   }
 
   /* GRID DE 4 (para quem é) */
@@ -406,27 +406,27 @@ const copy = {
   /* PASSOS (replicado de Home.astro) */
   .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; }
   .step { padding-top: 56px; position: relative; }
-  .step-num { position: absolute; top: 0; left: 0; font-family: var(--font-head); font-weight: 300; font-style: italic; font-size: 3.4rem; line-height: 1; color: var(--g2); opacity: .9; }
+  .step-num { position: absolute; top: 0; left: 0; font-family: var(--font-head); font-weight: 600; font-size: 28px; line-height: 36px; color: var(--heading); padding-bottom: 6px; border-bottom: 3px solid var(--accent); }
   .step h4 { font-weight: 600; text-transform: uppercase; letter-spacing: var(--tracking-wide); font-size: .9rem; margin-bottom: 8px; }
   .step p { color: var(--seven-muted); font-size: .9rem; line-height: 1.55; }
 
   /* CHECKLIST DE DOCUMENTOS */
   .checklist { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 28px; max-width: 880px; margin-inline: auto; }
-  .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; background: var(--seven-white); border: 1px solid var(--seven-line); border-radius: var(--r-md); box-shadow: var(--shadow-sm); }
+  .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; background: var(--surface-alt); }
   .checklist svg { width: 20px; height: 20px; flex: 0 0 20px; margin-top: 1px; color: var(--g2); }
   .checklist span { color: var(--seven-navy-deep); font-size: .96rem; line-height: 1.4; }
 
   /* INVESTIMENTO */
-  .price-card { max-width: 720px; margin-inline: auto; text-align: center; background: var(--seven-white); border: 1px solid var(--seven-line); border-top: 3px solid var(--g2); border-radius: var(--r-lg); box-shadow: var(--shadow-md); padding: clamp(32px, 5vw, 56px); }
+  .price-card { max-width: 720px; margin-inline: auto; text-align: center; background: var(--seven-white); border: 1px solid var(--seven-line); border-top: 3px solid var(--heading); border-radius: 0; padding: clamp(32px, 5vw, 56px); }
   .price-note { margin: 22px auto 26px; font-family: var(--font-head); font-weight: 500; font-size: 1.05rem; color: var(--seven-navy-deep); max-width: 46ch; }
 
   /* FAQ */
   .faq { display: flex; flex-direction: column; gap: 12px; }
-  .faq-item { background: var(--seven-white); border: 1px solid var(--seven-line); border-radius: var(--r-md); box-shadow: var(--shadow-sm); overflow: hidden; }
+  .faq-item { background: var(--surface); border-bottom: 1px solid var(--border-strong); overflow: hidden; }
   .faq-item summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; cursor: pointer; list-style: none; padding: 20px 22px; font-family: var(--font-head); font-weight: 600; font-size: 1.02rem; color: var(--seven-navy-deep); }
   .faq-item summary::-webkit-details-marker { display: none; }
   .faq-ic { position: relative; flex: 0 0 16px; width: 16px; height: 16px; }
-  .faq-ic::before, .faq-ic::after { content: ''; position: absolute; background: var(--g2); border-radius: 2px; transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out); }
+  .faq-ic::before, .faq-ic::after { content: ''; position: absolute; background: var(--heading); transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out); }
   .faq-ic::before { top: 7px; left: 0; width: 16px; height: 2px; }
   .faq-ic::after { left: 7px; top: 0; width: 2px; height: 16px; }
   .faq-item[open] .faq-ic::after { opacity: 0; transform: rotate(90deg); }
@@ -434,7 +434,7 @@ const copy = {
 
   /* CTA BAND (replicado de Home.astro) */
   .cta-band { padding-block: clamp(56px, 8vw, 90px); }
-  .closing-line { font-family: var(--font-head); font-weight: 300; font-style: italic; font-size: clamp(1.4rem, 3vw, 2.1rem); color: var(--g1); margin-bottom: 22px; }
+  .closing-line { font-family: var(--font-head); font-weight: 700; text-transform: uppercase; font-size: clamp(1.5rem, 3.4vw, 2.5rem); line-height: 1.1; color: var(--on-brand); margin-bottom: 28px; }
   .cta-actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 24px; }
 
   @media (max-width: 1040px) { .steps { grid-template-columns: 1fr 1fr 1fr; row-gap: 36px; } }

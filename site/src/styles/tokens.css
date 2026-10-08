@@ -1,55 +1,72 @@
 /* ============================================================
-   SEVEN Services — Design Tokens (handoff do Claude Design)
-   Fonte única: Bai Jamjuree (auto-hospedada em /fonts).
+   SEVEN — Design Tokens (design system "SEVEN" no Claude Design)
+   Paleta: Oceano, Grafite, Areia e Névoa + complementar.
+   Fonte única: Poppins (auto-hospedada em /fonts).
+   Sistema quase reto, sem sombras e sem degradês.
    ============================================================ */
-@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-ExtraLight.ttf') format('truetype');       font-weight:200; font-style:normal; font-display:swap; }
-@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-ExtraLightItalic.ttf') format('truetype'); font-weight:200; font-style:italic; font-display:swap; }
-@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-Light.ttf') format('truetype');            font-weight:300; font-style:normal; font-display:swap; }
-@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-LightItalic.ttf') format('truetype');      font-weight:300; font-style:italic; font-display:swap; }
-@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-Regular.ttf') format('truetype');          font-weight:400; font-style:normal; font-display:swap; }
-@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-Italic.ttf') format('truetype');           font-weight:400; font-style:italic; font-display:swap; }
-@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-Medium.ttf') format('truetype');           font-weight:500; font-style:normal; font-display:swap; }
-@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-MediumItalic.ttf') format('truetype');     font-weight:500; font-style:italic; font-display:swap; }
-@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-SemiBold.ttf') format('truetype');         font-weight:600; font-style:normal; font-display:swap; }
-@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-SemiBoldItalic.ttf') format('truetype');   font-weight:600; font-style:italic; font-display:swap; }
-@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-Bold.ttf') format('truetype');             font-weight:700; font-style:normal; font-display:swap; }
-@font-face { font-family:'Bai Jamjuree'; src:url('/fonts/BaiJamjuree-BoldItalic.ttf') format('truetype');       font-weight:700; font-style:italic; font-display:swap; }
+@font-face { font-family:'Poppins'; src:url('/fonts/Poppins-400.woff2') format('woff2'); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:'Poppins'; src:url('/fonts/Poppins-500.woff2') format('woff2'); font-weight:500; font-style:normal; font-display:swap; }
+@font-face { font-family:'Poppins'; src:url('/fonts/Poppins-600.woff2') format('woff2'); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:'Poppins'; src:url('/fonts/Poppins-700.woff2') format('woff2'); font-weight:700; font-style:normal; font-display:swap; }
 
 :root {
-  /* ---- Marca (canônico) ---- */
-  --seven-navy:#103554; --seven-navy-deep:#0A1C44;
-  --seven-gold:#D9974B; --seven-gold-light:#F1C46B; --seven-gold-pale:#F8D378;
-  --seven-gold-mid:#E0A94F; --seven-gold-deep:#A36A3F;
-  --seven-bone:#EEF0F0; --seven-white:#FFFFFF; --seven-muted:#5A6B82; --seven-line:#D9DEE4;
+  /* ---- Paleta principal ---- */
+  --oceano:#01203F; --grafite:#2F2F2F; --areia:#D6C496; --nevoa:#E6EAED; --branco:#FFFFFF;
+  /* ---- Paleta complementar ---- */
+  --complementar-1:#1C4670; --complementar-2:#8FA3B5; --complementar-3:#EDE4CC;
 
-  /* ---- Aliases p/ componentes existentes ---- */
-  --n0:#071432; --n1:#0A1C44; --n2:#103554; --n3:#1B3058;
-  --g0:#A36A3F; --g1:#F1C46B; --g2:#D9974B; --g3:#F8D378;
-  --off:#EEF0F0; --off2:#E4E7E7; --w:#FFFFFF;
-  --b1:#D9DEE4; --b2:#C4CCD4;
-  --t1:#0A1C44; --t2:#5A6B82; --t3:#8FA1B3;
-  --ok:#1A7A4A; --warn:#D97706; --danger:#C24A4A; --info:#1D4ED8;
+  /* ---- Papéis (tema claro) ---- */
+  --surface:var(--branco);          /* fundo da página */
+  --surface-alt:var(--nevoa);       /* painéis, cartões, faixas */
+  --surface-warm:var(--complementar-3); /* avisos e destaques */
+  --surface-brand:var(--oceano);    /* blocos de marca */
+  --ink:var(--grafite);             /* texto corrido */
+  --heading:var(--oceano);          /* títulos */
+  --ink-muted:var(--complementar-1);/* texto secundário */
+  --accent:var(--areia);            /* destaque gráfico — nunca texto em fundo claro */
+  --on-brand:var(--areia);          /* texto e logo sobre surface-brand */
+  --on-brand-muted:var(--complementar-2);
+  --action:var(--oceano); --on-action:var(--areia);
+  --border:var(--nevoa); --border-strong:var(--complementar-1);
+  --focus:var(--complementar-1); --focus-on-brand:var(--areia);
+
+  /* ---- Aliases p/ componentes existentes (mapeados para a nova paleta) ---- */
+  --seven-navy:var(--oceano); --seven-navy-deep:var(--oceano);
+  --seven-gold:var(--areia); --seven-gold-light:var(--areia); --seven-gold-pale:var(--complementar-3);
+  --seven-gold-mid:var(--areia); --seven-gold-deep:var(--complementar-1);
+  --seven-bone:var(--nevoa); --seven-white:var(--branco); --seven-muted:var(--complementar-1); --seven-line:var(--nevoa);
+  --seven-ink:var(--grafite);
+
+  --n0:var(--oceano); --n1:var(--oceano); --n2:var(--oceano); --n3:var(--complementar-1);
+  /* g1/g3 = Areia (destaque sobre Oceano); g0/g2 = tons legíveis em fundo claro */
+  --g0:var(--complementar-1); --g1:var(--areia); --g2:var(--complementar-1); --g3:var(--complementar-3);
+  --off:var(--nevoa); --off2:var(--nevoa); --w:var(--branco);
+  --b1:var(--nevoa); --b2:var(--complementar-2);
+  --t1:var(--oceano); --t2:var(--complementar-1); --t3:var(--complementar-2);
+  --ok:#1A6B45; --warn:#8A5A00; --danger:#A33A3A; --info:var(--complementar-1);
 
   /* ---- Tipografia ---- */
-  --font-head:'Bai Jamjuree','Helvetica Neue',Helvetica,Arial,sans-serif;
-  --font-body:'Bai Jamjuree',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
-  --tracking-tight:-0.015em; --tracking-wide:0.06em; --tracking-wider:0.16em; --tracking-widest:0.28em;
+  --font-sans:'Poppins','Helvetica Neue',Arial,sans-serif;
+  --font-head:var(--font-sans);
+  --font-body:var(--font-sans);
+  --tracking-tight:-0.01em; --tracking-wide:0.06em; --tracking-wider:0.12em; --tracking-widest:0.2em;
 
-  /* ---- Sombras (navy-tinted) ---- */
-  --shadow-sm:0 1px 2px rgba(10,28,68,.06);
-  --shadow-md:0 4px 16px rgba(10,28,68,.08),0 1px 2px rgba(10,28,68,.04);
-  --shadow-lg:0 16px 40px rgba(10,28,68,.12),0 2px 6px rgba(10,28,68,.06);
-  --shadow-xl:0 24px 60px rgba(10,28,68,.2),0 8px 16px rgba(10,28,68,.08);
-  --shadow-gold:0 10px 30px rgba(217,151,75,.35);
+  /* ---- Sem sombras: separação por superfície e fio fino ---- */
+  --shadow-sm:none; --shadow-md:none; --shadow-lg:none; --shadow-xl:none; --shadow-gold:none;
 
-  /* ---- Raios ---- */
-  --r-sm:4px; --r-md:8px; --r-lg:14px; --r-xl:22px; --r-2xl:26px;
+  /* ---- Raios (quase reto, como o símbolo) ---- */
+  --radius-none:0; --radius-sm:4px; --radius-pill:9999px;
+  --r-sm:4px; --r-md:4px; --r-lg:0; --r-xl:0; --r-2xl:0; --r-pill:9999px;
 
-  /* ---- Layout / gradientes / motion ---- */
+  /* ---- Espaçamento (múltiplos de 4px) ---- */
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px;
+  --space-8:32px; --space-12:48px; --space-16:64px; --space-24:96px;
+
+  /* ---- Layout / superfícies / motion ---- */
   --maxw:1200px;
-  --gutter:clamp(18px,4vw,32px);
-  --grad-navy:linear-gradient(180deg,#103554 0%,#0A1C44 100%);
-  --grad-gold:linear-gradient(135deg,#F8D378 0%,#E0A94F 35%,#D9974B 60%,#A36A3F 100%);
+  --gutter:clamp(16px,4vw,32px);
+  --grad-navy:var(--oceano);   /* sem degradês: bloco liso de Oceano */
+  --grad-gold:var(--areia);
   --ease-out:cubic-bezier(0.22,0.61,0.36,1);
   --dur-fast:120ms; --dur-base:220ms; --dur-slow:420ms;
 }
