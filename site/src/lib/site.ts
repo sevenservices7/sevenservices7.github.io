@@ -35,7 +35,7 @@ export function faqLd(faqs: { q: string; a: string }[]) {
 
 /** Links do SEVEN Cast. Preencha quando o canal estiver no ar; vazio = botão escondido. */
 export const PODCAST_LINKS = {
-  youtube: '',
+  youtube: 'https://www.youtube.com/@Seven.Business',
   spotify: '',
 };
 
