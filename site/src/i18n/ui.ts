@@ -27,11 +27,9 @@ export const ROUTES = {
   home: { pt: '/', en: '/en/', es: '/es/' },
   about: { pt: '/sobre', en: '/en/about', es: '/es/sobre' },
   team: { pt: '/equipa', en: '/en/team', es: '/es/equipo' },
-  services: { pt: '/servicos', en: '/en/services', es: '/es/servicios' },
   legalization: { pt: '/legalizacao-de-veiculos', en: '/en/vehicle-legalization', es: '/es/legalizacion-de-vehiculos' },
   booking: { pt: '/agendamento', en: '/en/booking', es: '/es/agenda' },
   contact: { pt: '/contato', en: '/en/contact', es: '/es/contacto' },
-  cart: { pt: '/carrinho', en: '/en/cart', es: '/es/carrito' },
   terms: { pt: '/legal/termos', en: '/en/legal/terms', es: '/es/legal/terminos' },
   privacy: { pt: '/legal/privacidade', en: '/en/legal/privacy', es: '/es/legal/privacidad' },
 } as const;

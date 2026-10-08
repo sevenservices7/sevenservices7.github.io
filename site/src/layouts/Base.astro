@@ -11,13 +11,17 @@ interface Props {
   description: string;
   routeKey?: RouteKey;
   ogImage?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown>[];
   bare?: boolean; // sem header/footer (ex.: páginas de retorno do checkout)
 }
-const { title, description, routeKey, ogImage, bare = false } = Astro.props;
+const { title, description, routeKey, ogImage, ogType, noindex, jsonLd, bare = false } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
+const htmlLang = lang === 'pt' ? 'pt-BR' : lang;
 ---
 <!doctype html>
-<html lang={lang}>
+<html lang={htmlLang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -27,11 +31,11 @@ const lang = getLangFromUrl(Astro.url);
     <link rel="apple-touch-icon" sizes="180x180" href="/brand/apple-touch-icon.png" />
     <link rel="preload" href="/fonts/Poppins-400.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/Poppins-700.woff2" as="font" type="font/woff2" crossorigin />
-    <Seo title={title} description={description} lang={lang} routeKey={routeKey} ogImage={ogImage} />
+    <Seo title={title} description={description} lang={lang} routeKey={routeKey} ogImage={ogImage} ogType={ogType} noindex={noindex} jsonLd={jsonLd} />
     <slot name="head" />
   </head>
   <body>
-    <a href="#main" class="skip-link">Saltar para o conteúdo</a>
+    <a href="#main" class="skip-link">{lang === 'pt' ? 'Pular para o conteúdo' : lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
     {!bare && <Header lang={lang} routeKey={routeKey} />}
     <main id="main">
       <slot />

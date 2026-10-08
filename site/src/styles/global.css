@@ -1,4 +1,5 @@
 @import './tokens.css';
+@import './sections.css';
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -61,8 +62,8 @@ section { padding-block: clamp(56px, 9vw, 96px); }
 /* Principal: Oceano + Areia no claro; Areia + Oceano sobre fundo Oceano */
 .btn-gold { --bg: var(--action); --fg: var(--on-action); }
 .btn-gold:hover { --bg: var(--complementar-1); }
-.bg-navy .btn-gold, .hero .btn-gold, .nav .btn-gold, .on-brand .btn-gold { --bg: var(--areia); --fg: var(--oceano); }
-.bg-navy .btn-gold:hover, .hero .btn-gold:hover, .nav .btn-gold:hover, .on-brand .btn-gold:hover { --bg: var(--complementar-3); }
+.bg-navy .btn-gold, .hero .btn-gold, .pg-hero .btn-gold, .sign-band .btn-gold, .testimonial .btn-gold, .nav .btn-gold, .on-brand .btn-gold { --bg: var(--areia); --fg: var(--oceano); }
+.bg-navy .btn-gold:hover, .hero .btn-gold:hover, .pg-hero .btn-gold:hover, .sign-band .btn-gold:hover, .testimonial .btn-gold:hover, .nav .btn-gold:hover, .on-brand .btn-gold:hover { --bg: var(--complementar-3); }
 /* Secundário: contorno */
 .btn-ghost { --bg: transparent; --fg: var(--heading); border-color: var(--border-strong); }
 .btn-ghost:hover { --bg: var(--surface-alt); --fg: var(--heading); }
@@ -98,13 +99,13 @@ section { padding-block: clamp(56px, 9vw, 96px); }
 .bg-navy { background: var(--surface-brand); color: var(--nevoa); }
 .bg-navy h1, .bg-navy h2, .bg-navy h3, .bg-navy h4 { color: var(--branco); }
 .bg-navy p, .bg-navy .lead { color: var(--nevoa); }
-.bg-navy .eyebrow, .hero .eyebrow { color: var(--on-brand-muted); }
-.bg-navy .eyebrow::before, .hero .eyebrow::before { background: var(--accent); }
+.bg-navy .eyebrow, .hero .eyebrow, .pg-hero .eyebrow, .sign-band .eyebrow, .testimonial .eyebrow, .nav .eyebrow, .on-brand .eyebrow { color: var(--on-brand-muted); }
+.bg-navy .eyebrow::before, .hero .eyebrow::before, .pg-hero .eyebrow::before, .sign-band .eyebrow::before, .testimonial .eyebrow::before, .nav .eyebrow::before, .on-brand .eyebrow::before { background: var(--accent); }
 .bg-off { background: var(--surface-alt); }
 .bg-white { background: var(--surface); }
 .bg-warm { background: var(--surface-warm); }
 
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
-.bg-navy :focus-visible, .hero :focus-visible, .nav :focus-visible, .footer :focus-visible { outline-color: var(--focus-on-brand); }
+.bg-navy :focus-visible, .hero :focus-visible, .pg-hero :focus-visible, .sign-band :focus-visible, .testimonial :focus-visible, .nav :focus-visible, .on-brand :focus-visible, .footer :focus-visible { outline-color: var(--focus-on-brand); }
 .skip-link { position: absolute; left: -999px; top: 8px; z-index: 1000; background: var(--action); color: var(--on-action); padding: 10px 16px; border-radius: var(--radius-sm); }
 .skip-link:focus { left: 8px; }

@@ -1,0 +1,86 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import YouTube from '../../components/YouTube.astro';
+import { getSolution } from '../../data/solucoes';
+import type { Solution } from '../../data/solution-types';
+import { SITE_URL, breadcrumbLd } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const eps = await getCollection('podcast');
+  return eps.map((ep) => ({ params: { slug: ep.id }, props: { ep } }));
+}
+
+interface Props { ep: CollectionEntry<'podcast'> }
+const { ep } = Astro.props;
+const { Content } = await render(ep);
+const d = ep.data;
+const path = `/podcast/${ep.id}`;
+const related = d.related.map(getSolution).filter((x): x is Solution => Boolean(x));
+const dateFmt = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+
+const videoLd = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoObject',
+  name: d.title,
+  description: d.description,
+  thumbnailUrl: `https://i.ytimg.com/vi/${d.youtubeId}/hqdefault.jpg`,
+  uploadDate: d.pubDate.toISOString(),
+  embedUrl: `https://www.youtube.com/embed/${d.youtubeId}`,
+  contentUrl: `https://www.youtube.com/watch?v=${d.youtubeId}`,
+  inLanguage: 'pt-BR',
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  partOfSeries: { '@type': 'PodcastSeries', name: 'SEVEN Cast', url: `${SITE_URL}/podcast` },
+};
+---
+<Base
+  title={`${d.title} | SEVEN Cast`}
+  description={d.description}
+  ogType="article"
+  ogImage={undefined}
+  noindex={d.draft}
+  jsonLd={[videoLd, breadcrumbLd([{ name: 'Início', path: '/' }, { name: 'SEVEN Cast', path: '/podcast' }, { name: d.title, path }])]}
+>
+  <article>
+    <header class="pg-hero ep-head">
+      <div class="container" style="max-width:960px">
+        <nav aria-label="Você está em"><ol class="crumbs"><li><a href="/">Início</a></li><li><a href="/podcast">SEVEN Cast</a></li></ol></nav>
+        <span class="eyebrow">{d.episode ? `Episódio ${d.episode}` : 'SEVEN Cast'}</span>
+        <h1>{d.title}</h1>
+        <p class="lede">{d.description}</p>
+        <p class="meta-line">
+          <time datetime={d.pubDate.toISOString()}>{dateFmt.format(d.pubDate)}</time>{d.duration && ` · ${d.duration}`}{d.guests.length > 0 && ` · com ${d.guests.join(', ')}`}
+        </p>
+      </div>
+    </header>
+    <section class="bg-white">
+      <div class="container" style="max-width:960px">
+        <YouTube id={d.youtubeId} title={d.title} />
+        <div class="prose" style="margin-top:48px"><Content /></div>
+      </div>
+    </section>
+  </article>
+
+  {related.length > 0 && (
+    <section class="bg-off">
+      <div class="container">
+        <div class="sec-head"><span class="eyebrow">Falado no episódio</span><h2>Precisa resolver isso na prática?</h2></div>
+        <div class="link-cards">
+          {related.map((r) => <a href={`/${r.slug}`} class="link-card"><h3>{r.navLabel}</h3><p>{r.cardSummary}</p><span class="go">Saiba mais</span></a>)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="sign-band">
+    <div class="container">
+      <p class="statement">Deu problema? Pensa na SEVEN.</p>
+      <div class="ctas"><a href="/agendamento" class="btn btn-gold">Falar com um especialista</a><a href="/podcast" class="btn btn-light">Mais episódios</a></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ep-head h1 { font-size: clamp(1.9rem, 4.2vw, 3rem); max-width: 22ch; }
+  .ep-head .meta-line { margin-top: 8px; }
+</style>

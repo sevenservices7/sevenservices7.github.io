@@ -14,10 +14,10 @@ const others = team.filter((m) => m !== founder);
 type Bio = { role: string; languages: string; phrase: string };
 const TEAM: Record<Lang, Record<string, Bio>> = {
   pt: {
-    DJ: { role: 'Fundador & CEO', languages: 'Português, espanhol', phrase: '«Traz-me o problema, que eu trago a solução.» Rápido e determinado, o objetivo dele é um só: que o cliente conquiste o que veio buscar.' },
-    AK: { role: 'Advogada', languages: 'Português, inglês', phrase: 'Alto sentido de justiça e muita empatia. É quem garante que cada processo assenta em terreno legal firme.' },
-    GR: { role: 'Coordenadora de Processos', languages: 'Português, inglês, espanhol', phrase: 'O braço-direito da operação. Inteligente, rápida e atenciosa — é por muitas mãos dela que os processos passam.' },
-    DS: { role: 'Coordenadora de Processos · Unidade de Faro', languages: 'Português', phrase: 'Contabilista de formação, simpatia em pessoa. Cuida de quem chega a Faro com a atenção de quem trata de gente, não de papéis.' },
+    DJ: { role: 'Fundador e CEO', languages: 'Português, espanhol', phrase: '“Me traz o problema, que eu trago a solução.” Rápido e determinado, ele tem um objetivo só: que o cliente conquiste o que veio buscar.' },
+    AK: { role: 'Advogada', languages: 'Português, inglês', phrase: 'Senso de justiça forte e muita empatia. É ela quem garante que cada processo está em terreno legal firme.' },
+    GR: { role: 'Coordenadora de Processos', languages: 'Português, inglês, espanhol', phrase: 'O braço direito da operação. Inteligente, rápida e atenciosa — boa parte dos processos passa pelas mãos dela.' },
+    DS: { role: 'Coordenadora de Processos · Unidade de Faro', languages: 'Português', phrase: 'Contadora de formação e simpatia em pessoa. Cuida de quem chega a Faro com a atenção de quem lida com gente, não com papel.' },
   },
   en: {
     DJ: { role: 'Founder & CEO', languages: 'Portuguese, Spanish', phrase: '«Bring me the problem, and I’ll bring the solution.» Fast and determined, he has one goal: that the client gets what they came for.' },
@@ -34,7 +34,7 @@ const TEAM: Record<Lang, Record<string, Bio>> = {
 };
 const langsLabel = { pt: 'Idiomas', en: 'Languages', es: 'Idiomas' }[lang];
 const closing = {
-  pt: 'Atendemos em português, inglês e espanhol — na língua em que se sentir à vontade.',
+  pt: 'A gente atende em português, inglês e espanhol — na língua em que você se sentir mais à vontade.',
   en: 'We serve in Portuguese, English and Spanish — in whichever language you feel most comfortable.',
   es: 'Atendemos en portugués, inglés y español — en el idioma en el que se sienta cómodo.',
 }[lang];

@@ -1,0 +1,134 @@
+---
+import type { Solution } from '../../data/solution-types';
+import { getSolution, STAGES } from '../../data/solucoes';
+import WhatsAppButton from '../WhatsAppButton.astro';
+import { mainWhatsapp, waText } from '../../lib/site';
+
+interface Props { solution: Solution; }
+const { solution: s } = Astro.props;
+const wa = await mainWhatsapp();
+const stage = STAGES.find((x) => x.id === s.stage);
+const related = s.related.map(getSolution).filter((x): x is Solution => Boolean(x));
+---
+<section class="pg-hero">
+  <div class="container">
+    <nav aria-label="Você está em">
+      <ol class="crumbs">
+        <li><a href="/">Início</a></li>
+        <li><a href="/solucoes">Soluções</a></li>
+        <li aria-current="page">{s.navLabel}</li>
+      </ol>
+    </nav>
+    <span class="eyebrow">{s.eyebrow}</span>
+    <h1>{s.h1}</h1>
+    <p class="lede">{s.lede}</p>
+    <div class="ctas">
+      <a href="/agendamento" class="btn btn-gold">Falar com um especialista</a>
+      <WhatsAppButton whatsapp={wa} text={waText(s.navLabel)} label="Conversar no WhatsApp" />
+    </div>
+    {s.highlights.length > 0 && (
+      <div class="pg-highlights">
+        {s.highlights.map((h) => <div><strong>{h.value}</strong><span>{h.label}</span></div>)}
+      </div>
+    )}
+  </div>
+  <div class="pg-hero-mark" aria-hidden="true"></div>
+</section>
+
+<section class="bg-white">
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow">Para quem é</span>
+      <h2>{s.forWhoTitle}</h2>
+    </div>
+    <div class:list={['tiles', s.forWho.length % 3 === 0 ? 'tiles-3' : 'tiles-2']}>
+      {s.forWho.map((it) => <div class="tile"><h3>{it.title}</h3><p>{it.body}</p></div>)}
+    </div>
+    {s.dictionary && s.dictionary.length > 0 && (
+      <aside class="dict" style="margin-top:32px">
+        <h2>Dicionário da SEVEN</h2>
+        <dl>{s.dictionary.map((d) => <><dt>{d.term}</dt><dd>{d.meaning}</dd></>)}</dl>
+      </aside>
+    )}
+  </div>
+</section>
+
+<section class="bg-off">
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow">O que a gente faz</span>
+      <h2>{s.includedTitle}</h2>
+    </div>
+    <div class:list={['tiles', s.included.length % 3 === 0 ? 'tiles-3' : 'tiles-2']}>
+      {s.included.map((it) => <div class="tile"><h3>{it.title}</h3><p>{it.body}</p></div>)}
+    </div>
+  </div>
+</section>
+
+<section class="bg-white">
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow">Como funciona</span>
+      <h2>{s.stepsTitle}</h2>
+    </div>
+    <ol class="steps-list">
+      {s.steps.map((st, i) => (
+        <li><span class="n">{String(i + 1).padStart(2, '0')}</span><div><h3>{st.title}</h3><p>{st.body}</p></div></li>
+      ))}
+    </ol>
+    {s.important && (
+      <div class="notice" style="margin-top:40px">
+        <h3>{s.important.title}</h3>
+        <p>{s.important.body}</p>
+      </div>
+    )}
+    {s.external && (
+      <div class="ext" style="margin-top:24px">
+        <div><h3>{s.external.title}</h3><p>{s.external.body}</p></div>
+        <a href={s.external.href} class="btn btn-ghost" target="_blank" rel="noopener">{s.external.label}</a>
+      </div>
+    )}
+  </div>
+</section>
+
+<section class="bg-off">
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow">Dúvidas</span>
+      <h2>O que perguntam antes de começar.</h2>
+    </div>
+    <div class="faq-list">
+      {s.faqs.map((f) => (
+        <details><summary>{f.q}</summary><p class="a">{f.a}</p></details>
+      ))}
+    </div>
+  </div>
+</section>
+
+{related.length > 0 && (
+  <section class="bg-white">
+    <div class="container">
+      <div class="sec-head">
+        <span class="eyebrow">{stage ? `Próximos passos da jornada` : 'Veja também'}</span>
+        <h2>A gente acompanha você no caminho inteiro.</h2>
+      </div>
+      <div class="link-cards">
+        {related.map((r) => (
+          <a href={`/${r.slug}`} class="link-card"><h3>{r.navLabel}</h3><p>{r.cardSummary}</p><span class="go">Saiba mais</span></a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<section class="sign-band">
+  <div class="container">
+    <p class="statement">Sempre existe um caminho.</p>
+    <h2>{s.ctaTitle}</h2>
+    <p>{s.ctaBody}</p>
+    <div class="ctas">
+      <a href="/agendamento" class="btn btn-gold">Falar com um especialista</a>
+      <WhatsAppButton whatsapp={wa} text={waText(s.navLabel)} label="Conversar no WhatsApp" />
+    </div>
+  </div>
+</section>

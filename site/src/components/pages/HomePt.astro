@@ -1,0 +1,222 @@
+---
+// Home em PT-BR, contada como jornada (decidir → chegar → morar → ser português → empreender).
+import { getCollection } from 'astro:content';
+import { getOffices } from '../../lib/data';
+import { STAGES, solutionsByStage } from '../../data/solucoes';
+import { mainWhatsapp, waText } from '../../lib/site';
+import UnitCard from '../UnitCard.astro';
+import TrustBadges from '../TrustBadges.astro';
+import WhatsAppButton from '../WhatsAppButton.astro';
+
+const offices = await getOffices();
+const wa = await mainWhatsapp();
+const journey = STAGES.filter((s) => s.id !== 'apoio').map((s) => ({ ...s, items: solutionsByStage(s.id) }));
+
+const byDate = <T extends { data: { pubDate: Date } }>(a: T, b: T) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(byDate).slice(0, 3);
+const episodes = (await getCollection('podcast', ({ data }) => !data.draft)).sort(byDate).slice(0, 2);
+const dateFmt = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+
+const principles = [
+  ['01', 'Traduz sempre', 'Termo técnico vem com tradução ao lado. NIF é o CPF português; Finanças é a Receita Federal de lá. Você entende cada passo do seu processo.'],
+  ['02', 'Honesta até no "não"', 'Se por um caminho não dá, a gente diz o porquê. E mostra outro, dentro da lei. Sem jeitinho.'],
+  ['03', 'Acompanha a jornada inteira', 'Da decisão de sair do Brasil à nacionalidade e ao seu próprio negócio. A gente lembra do próximo passo antes de você precisar.'],
+];
+
+// Palavras dos clientes, sem edição.
+const testimonials = [
+  { q: 'Em três semanas tinha o NIF, a morada fiscal e o pedido de residência submetido. Nunca pensei que pudesse ser tão simples.', who: 'Ana R. · Lisboa' },
+  { q: 'O atendimento foi impecável. Resolveram pendências que me diziam serem complicadas, trataram de toda a documentação e deram suporte até à entrevista na AIMA. Confio totalmente na Seven.', who: 'Sara Silva' },
+  { q: 'Cheguei em abril como turista. Em outubro tinha o título de residência na mão — fizeram tudo, do NIF ao título.', who: 'Eduardo Rodrigues' },
+];
+---
+<section class="pg-hero home-hero">
+  <div class="container">
+    <span class="eyebrow">Imigração · Empresas · Contabilidade</span>
+    <h1>Sempre existe um <em>caminho.</em></h1>
+    <p class="lede">A SEVEN transforma a complexidade de viver e empreender em Portugal em caminho claro. Do Brasil à nacionalidade, do primeiro documento ao seu próprio negócio. Do jeito certo.</p>
+    <div class="ctas">
+      <a href="/agendamento" class="btn btn-gold">Falar com um especialista</a>
+      <a href="/solucoes" class="btn btn-light">Ver soluções</a>
+    </div>
+    <div class="pg-highlights">
+      <div><strong>~2.000</strong><span>clientes atendidos desde 2022</span></div>
+      <div><strong>4,9</strong><span>no Google, em 178 avaliações</span></div>
+      <div><strong>3</strong><span>unidades: Albufeira, Faro e Porto</span></div>
+      <div><strong>Online</strong><span>ou presencial, de onde você estiver</span></div>
+    </div>
+  </div>
+  <div class="pg-hero-mark" aria-hidden="true"></div>
+</section>
+
+<!-- JORNADA -->
+<section class="bg-white">
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow">A sua jornada</span>
+      <h2>A vida lá fora tem etapas. A gente acompanha todas.</h2>
+      <p class="lead">Você não precisa saber o nome do processo. Diga onde está, e a gente mostra o próximo passo.</p>
+    </div>
+    <ol class="journey">
+      {journey.map((st) => (
+        <li class="journey-step">
+          <span class="journey-n">{st.step}</span>
+          <h3>{st.title}</h3>
+          <p>{st.summary}</p>
+          {st.items.length > 0 && (
+            <ul>{st.items.map((it) => <li><a href={`/${it.slug}`}>{it.navLabel}</a></li>)}</ul>
+          )}
+        </li>
+      ))}
+    </ol>
+    <p style="margin-top:28px"><a href="/solucoes" class="btn btn-ghost">Ver todas as soluções</a></p>
+  </div>
+</section>
+
+<!-- JEITO SEVEN -->
+<section class="bg-off">
+  <div class="container home-split">
+    <div class="sec-head">
+      <span class="eyebrow">O jeito SEVEN</span>
+      <h2>Sem jeitinho. Com caminho.</h2>
+      <p class="lead">A gente vende o que você precisa, não o que você pede. E prefere perder uma venda a perder um cliente.</p>
+    </div>
+    <ol class="steps-list">
+      {principles.map(([n, ti, d]) => <li><span class="n">{n}</span><div><h3>{ti}</h3><p>{d}</p></div></li>)}
+    </ol>
+  </div>
+</section>
+
+<!-- EMPRESAS -->
+<section class="bg-white">
+  <div class="container">
+    <div class="biz">
+      <div class="biz-main">
+        <span class="eyebrow">SEVEN para empresas</span>
+        <h2>Vai empreender em Portugal? A burocracia fica com a gente.</h2>
+        <p class="lead">Abertura da empresa, enquadramento nas Finanças (a Receita Federal de Portugal) e contabilidade todo mês, com quem entende o empresário brasileiro.</p>
+      </div>
+      <div class="link-cards">
+        <a href="/abrir-empresa-em-portugal" class="link-card"><h3>Abrir empresa em Portugal</h3><p>Do tipo de empresa certo ao registro, sem surpresa.</p><span class="go">Saiba mais</span></a>
+        <a href="/contabilidade-em-portugal" class="link-card"><h3>Contabilidade</h3><p>Impostos e obrigações em dia, com contabilista certificado.</p><span class="go">Saiba mais</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="testimonial">
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow">Quem já fez o caminho</span>
+      <h2>Resolvido. Do jeito certo.</h2>
+    </div>
+    <div class="tgrid">
+      {testimonials.map((tm) => (
+        <figure class="tcard"><blockquote>{tm.q}</blockquote><figcaption class="who">{tm.who}</figcaption></figure>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- UNIDADES -->
+<section id="unidades" class="bg-off">
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow">Unidades</span>
+      <h2>Perto de você, em Portugal.</h2>
+      <p class="lead">Atendimento presencial em Albufeira, Faro e Porto, ou online, de onde você estiver.</p>
+    </div>
+    <div class="grid cols-3">
+      {offices.map((o) => <UnitCard office={o} lang="pt" />)}
+    </div>
+  </div>
+</section>
+
+<!-- CONTEÚDO: CAST + BLOG -->
+<section class="bg-white">
+  <div class="container">
+    <div class="cast">
+      <div>
+        <span class="eyebrow">SEVEN Cast</span>
+        <h2>Vida real na Europa, sem filtro.</h2>
+        <p class="lead">Conversas diretas sobre imigração, dinheiro e negócios em Portugal. Com transcrição completa de cada episódio.</p>
+        <p style="margin-top:22px"><a href="/podcast" class="btn btn-ghost">Ouvir o SEVEN Cast</a></p>
+      </div>
+      {episodes.length > 0 && (
+        <div class="link-cards">
+          {episodes.map((e) => (
+            <a href={`/podcast/${e.id}`} class="link-card"><span class="meta-line">{e.data.episode ? `Episódio ${e.data.episode}` : 'Episódio'}</span><h3>{e.data.title}</h3><p>{e.data.description}</p><span class="go">Assistir</span></a>
+          ))}
+        </div>
+      )}
+    </div>
+
+    {posts.length > 0 && (
+      <div style="margin-top:clamp(48px,7vw,80px)">
+        <div class="sec-head">
+          <span class="eyebrow">Blog</span>
+          <h2>Explicado do jeito que você entende.</h2>
+        </div>
+        <div class="link-cards">
+          {posts.map((p) => (
+            <a href={`/blog/${p.id}`} class="link-card"><span class="meta-line">{dateFmt.format(p.data.pubDate)}</span><h3>{p.data.title}</h3><p>{p.data.description}</p><span class="go">Ler artigo</span></a>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</section>
+
+<section class="bg-off"><div class="container"><TrustBadges lang="pt" /></div></section>
+
+<section class="sign-band">
+  <div class="container">
+    <p class="statement">Clareza para ir além.</p>
+    <h2>Conte o seu caso para um especialista.</h2>
+    <p>Na consultoria, a gente entende onde você está e mostra o caminho, dentro da lei. Se você seguir com o serviço, o valor da consultoria é descontado.</p>
+    <div class="ctas">
+      <a href="/agendamento" class="btn btn-gold">Falar com um especialista</a>
+      <WhatsAppButton whatsapp={wa} text={waText()} label="Conversar no WhatsApp" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .home-hero h1 { font-size: clamp(2.6rem, 7vw, 5rem); text-transform: uppercase; max-width: 12ch; }
+  .journey { list-style: none; display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .journey-step { background: var(--surface); padding: 24px 20px; display: flex; flex-direction: column; gap: 8px; }
+  .journey-n { font-size: 28px; line-height: 36px; font-weight: 600; color: var(--heading); padding-bottom: 6px; border-bottom: 3px solid var(--accent); align-self: flex-start; }
+  .journey-step h3 { margin-top: 8px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: .02em; }
+  .journey-step p { color: var(--ink-muted); font-size: .92rem; line-height: 1.55; }
+  .journey-step ul { list-style: none; margin-top: auto; padding-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .journey-step ul a { font-size: .9rem; font-weight: 500; color: var(--heading); text-decoration: underline; text-decoration-color: var(--complementar-2); text-underline-offset: 3px; }
+  .journey-step ul a:hover { text-decoration-color: var(--heading); }
+  @media (max-width: 1000px) { .journey { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .journey { grid-template-columns: 1fr; } }
+
+  .home-split { display: grid; grid-template-columns: 1fr 1.3fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
+  @media (max-width: 860px) { .home-split { grid-template-columns: 1fr; } }
+
+  .biz { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  .biz-main h2 { font-size: clamp(1.7rem, 3.4vw, 2.5rem); margin-bottom: 14px; }
+  .biz .link-cards { grid-template-columns: 1fr; }
+  @media (max-width: 860px) { .biz { grid-template-columns: 1fr; } }
+
+  .testimonial { background: var(--surface-brand); color: var(--nevoa); padding: clamp(64px, 9vw, 104px) 0; }
+  .testimonial h2 { color: var(--branco); }
+  .testimonial .eyebrow { color: var(--on-brand-muted); }
+  .testimonial .eyebrow::before { background: var(--accent); }
+  .tgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .tcard { margin: 0; display: flex; flex-direction: column; gap: 18px; padding: 28px; background: var(--complementar-1); }
+  .tcard blockquote { font-weight: 400; font-size: 1.05rem; line-height: 1.6; margin: 0; color: var(--nevoa); }
+  .tcard blockquote::before { content: '“'; color: var(--accent); }
+  .tcard blockquote::after { content: '”'; color: var(--accent); }
+  .tcard .who { margin-top: auto; font-weight: 500; font-size: 13px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent); }
+  @media (max-width: 860px) { .tgrid { grid-template-columns: 1fr; } }
+
+  .cast { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(32px, 5vw, 64px); align-items: start; }
+  .cast h2 { font-size: clamp(1.7rem, 3.4vw, 2.5rem); }
+  .cast .link-cards { grid-template-columns: 1fr; }
+  @media (max-width: 860px) { .cast { grid-template-columns: 1fr; } }
+</style>

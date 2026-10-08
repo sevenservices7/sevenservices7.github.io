@@ -1,11 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
-import Home from '../components/pages/Home.astro';
+import HomePt from '../components/pages/HomePt.astro';
 import UnitsOverlay from '../components/UnitsOverlay.astro';
-import { useTranslations } from '../i18n/ui';
-const t = useTranslations('pt');
 ---
-<Base title={`${t('site.name')} — ${t('site.tagline')}`} description={t('home.hero.subtitle')} routeKey="home">
+<Base
+  title="SEVEN | Imigração, empresas e contabilidade em Portugal"
+  description="Assessoria para brasileiros em Portugal: residência, AIMA, NIF, IRS, nacionalidade, abertura de empresa e contabilidade. Sempre existe um caminho."
+  routeKey="home"
+>
   <UnitsOverlay lang="pt" />
-  <Home lang="pt" />
+  <HomePt />
 </Base>

@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import SolutionPage from '../components/pages/SolutionPage.astro';
+import { solutions } from '../data/solucoes';
+import type { Solution } from '../data/solution-types';
+import { SITE_URL, breadcrumbLd, faqLd } from '../lib/site';
+
+export function getStaticPaths() {
+  return solutions.map((solution) => ({ params: { solucao: solution.slug }, props: { solution } }));
+}
+
+interface Props { solution: Solution; }
+const { solution: s } = Astro.props;
+const path = `/${s.slug}`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: s.navLabel,
+    serviceType: s.navLabel,
+    description: s.metaDescription,
+    url: SITE_URL + path,
+    provider: { '@id': `${SITE_URL}/#organization` },
+    areaServed: { '@type': 'Country', name: 'Portugal' },
+    availableLanguage: ['pt-BR', 'en', 'es'],
+  },
+  faqLd(s.faqs),
+  breadcrumbLd([
+    { name: 'Início', path: '/' },
+    { name: 'Soluções', path: '/solucoes' },
+    { name: s.navLabel, path },
+  ]),
+];
+---
+<Base title={s.seoTitle} description={s.metaDescription} jsonLd={jsonLd} routeKey={s.slug === 'legalizacao-de-veiculos' ? 'legalization' : undefined}>
+  <SolutionPage solution={s} />
+</Base>

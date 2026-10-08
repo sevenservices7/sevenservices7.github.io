@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { breadcrumbLd, PODCAST_LINKS } from '../../lib/site';
+
+const episodes = (await getCollection('podcast', ({ data }) => !data.draft)).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const dateFmt = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+---
+<Base
+  title="SEVEN Cast: o podcast da vida real em Portugal | SEVEN"
+  description="Conversas diretas sobre imigração, dinheiro e negócios para brasileiros em Portugal. Assista no YouTube e leia a transcrição completa de cada episódio."
+  jsonLd={[
+    breadcrumbLd([{ name: 'Início', path: '/' }, { name: 'SEVEN Cast', path: '/podcast' }]),
+    { '@context': 'https://schema.org', '@type': 'PodcastSeries', name: 'SEVEN Cast', url: 'https://sevenservicess.com/podcast', inLanguage: 'pt-BR', author: { '@id': 'https://sevenservicess.com/#organization' } },
+  ]}
+>
+  <section class="pg-hero">
+    <div class="container">
+      <nav aria-label="Você está em"><ol class="crumbs"><li><a href="/">Início</a></li><li aria-current="page">SEVEN Cast</li></ol></nav>
+      <span class="eyebrow">SEVEN Cast</span>
+      <h1>Vida real na Europa, <em>sem filtro.</em></h1>
+      <p class="lede">Imigração, dinheiro e negócios em Portugal, numa conversa direta e descontraída. Cada episódio tem a transcrição completa, para você ler, buscar e voltar quando precisar.</p>
+      {(PODCAST_LINKS.youtube || PODCAST_LINKS.spotify) && (
+        <div class="ctas">
+          {PODCAST_LINKS.youtube && <a href={PODCAST_LINKS.youtube} class="btn btn-gold" target="_blank" rel="noopener">Assistir no YouTube</a>}
+          {PODCAST_LINKS.spotify && <a href={PODCAST_LINKS.spotify} class="btn btn-light" target="_blank" rel="noopener">Ouvir no Spotify</a>}
+        </div>
+      )}
+    </div>
+    <div class="pg-hero-mark" aria-hidden="true"></div>
+  </section>
+
+  <section class="bg-white">
+    <div class="container">
+      {episodes.length > 0 ? (
+        <div class="eps">
+          {episodes.map((e) => (
+            <a href={`/podcast/${e.id}`} class="ep">
+              <img src={`https://i.ytimg.com/vi/${e.data.youtubeId}/hqdefault.jpg`} alt="" loading="lazy" width="480" height="360" />
+              <div>
+                <span class="meta-line">{e.data.episode ? `Episódio ${e.data.episode} · ` : ''}{dateFmt.format(e.data.pubDate)}{e.data.duration ? ` · ${e.data.duration}` : ''}</span>
+                <h2>{e.data.title}</h2>
+                <p>{e.data.description}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="sec-head">
+          <h2>Os episódios chegam aqui em breve.</h2>
+          <p class="lead">Enquanto isso, leia os guias do blog ou fale direto com um especialista.</p>
+          <p style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap"><a href="/blog" class="btn btn-ghost">Ir para o blog</a><a href="/agendamento" class="btn btn-gold">Falar com um especialista</a></p>
+        </div>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .eps { display: flex; flex-direction: column; border-top: 1px solid var(--border-strong); }
+  .ep { display: grid; grid-template-columns: 280px 1fr; gap: 28px; padding: 28px 0; border-bottom: 1px solid var(--border-strong); align-items: center; }
+  .ep img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+  .ep h2 { font-size: clamp(1.2rem, 2.2vw, 1.5rem); margin: 8px 0; }
+  .ep p { color: var(--ink-muted); }
+  .ep:hover h2 { text-decoration: underline; text-underline-offset: 4px; }
+  @media (max-width: 640px) { .ep { grid-template-columns: 1fr; gap: 14px; } }
+</style>

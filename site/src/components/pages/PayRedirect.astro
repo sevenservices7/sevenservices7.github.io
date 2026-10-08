@@ -6,37 +6,37 @@ const { lang } = Astro.props;
 
 const copy = {
   pt: {
-    preparing: 'A preparar o pagamento seguro…',
-    redirecting: 'Vai ser reencaminhado para o Stripe.',
+    preparing: 'Preparando o pagamento seguro…',
+    redirecting: 'Você vai ser redirecionado para o Stripe.',
     errorTitle: 'Link inválido',
-    errorBody: 'Este link de pagamento não é válido ou o serviço já não está disponível. Contacte-nos para obter um novo link.',
-    services: 'Ver serviços',
+    errorBody: 'Este link de pagamento não é válido ou o serviço não está mais disponível. Fale com a gente para receber um novo link.',
+    services: 'Falar com a equipe',
   },
   en: {
     preparing: 'Preparing secure payment…',
     redirecting: 'You will be redirected to Stripe.',
     errorTitle: 'Invalid link',
     errorBody: 'This payment link is not valid or the service is no longer available. Contact us for a new link.',
-    services: 'Browse services',
+    services: 'Talk to the team',
   },
   es: {
     preparing: 'Preparando el pago seguro…',
     redirecting: 'Será redirigido a Stripe.',
     errorTitle: 'Enlace no válido',
     errorBody: 'Este enlace de pago no es válido o el servicio ya no está disponible. Contáctenos para un nuevo enlace.',
-    services: 'Ver servicios',
+    services: 'Hablar con el equipo',
   },
 }[lang];
 ---
 <section class="bg-navy" style="min-height:60vh;display:flex;align-items:center"
-  data-pay data-lang={lang} data-services-href={getRoute('services', lang)}
+  data-pay data-lang={lang} data-services-href={getRoute('contact', lang)}
   data-preparing={copy.preparing} data-error-title={copy.errorTitle} data-error-body={copy.errorBody} data-services={copy.services}>
   <div class="container center" style="max-width:600px">
     <div class="pay-spin" data-pay-spin></div>
     <h1 data-pay-title>{copy.preparing}</h1>
     <p class="lead" style="margin-inline:auto" data-pay-body>{copy.redirecting}</p>
     <div data-pay-actions style="margin-top:26px;display:none;justify-content:center">
-      <a href={getRoute('services', lang)} class="btn btn-gold">{copy.services}</a>
+      <a href={getRoute('contact', lang)} class="btn btn-gold">{copy.services}</a>
     </div>
   </div>
 </section>

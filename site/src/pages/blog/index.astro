@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { breadcrumbLd } from '../../lib/site';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const dateFmt = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+---
+<Base
+  title="Blog: imigração, impostos e empresas em Portugal | SEVEN"
+  description="Guias e notícias sobre AIMA, residência, NIF, IRS, nacionalidade e empresas em Portugal, explicados para brasileiros. Sem juridiquês, sem alarme."
+  jsonLd={[breadcrumbLd([{ name: 'Início', path: '/' }, { name: 'Blog', path: '/blog' }])]}
+>
+  <section class="pg-hero">
+    <div class="container">
+      <nav aria-label="Você está em"><ol class="crumbs"><li><a href="/">Início</a></li><li aria-current="page">Blog</li></ol></nav>
+      <span class="eyebrow">Blog e notícias</span>
+      <h1>Explicado do jeito que você <em>entende.</em></h1>
+      <p class="lede">Mudou a lei? Saiu regra nova na AIMA? Chegou a época do IRS? A gente explica com calma o que muda para você e o que continua igual.</p>
+    </div>
+    <div class="pg-hero-mark" aria-hidden="true"></div>
+  </section>
+
+  <section class="bg-white">
+    <div class="container">
+      {posts.length > 0 ? (
+        <div class="link-cards">
+          {posts.map((p) => (
+            <a href={`/blog/${p.id}`} class="link-card">
+              <span class="meta-line">{dateFmt.format(p.data.pubDate)}</span>
+              <h3>{p.data.title}</h3>
+              <p>{p.data.description}</p>
+              <span class="go">Ler artigo</span>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="sec-head">
+          <h2>Os primeiros artigos estão chegando.</h2>
+          <p class="lead">Enquanto isso, veja as soluções da SEVEN ou fale direto com um especialista.</p>
+          <p style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap"><a href="/solucoes" class="btn btn-ghost">Ver soluções</a><a href="/agendamento" class="btn btn-gold">Falar com um especialista</a></p>
+        </div>
+      )}
+    </div>
+  </section>
+</Base>

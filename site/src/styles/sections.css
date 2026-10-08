@@ -1,0 +1,112 @@
+/* ============================================================
+   Seções reutilizáveis das páginas da SEVEN (hero, passos, FAQ,
+   cartões, faixa de assinatura). Baseadas no design system SEVEN:
+   quase reto, sem sombras, separação por superfície e fio fino.
+   ============================================================ */
+
+/* ---- Hero de página (bloco Oceano) ---- */
+.pg-hero { position: relative; overflow: hidden; background: var(--surface-brand); color: var(--nevoa); padding: clamp(56px, 9vw, 112px) 0 clamp(48px, 7vw, 88px); }
+.pg-hero .container { position: relative; z-index: 1; }
+.pg-hero h1 { color: var(--branco); font-weight: 700; font-size: clamp(2.1rem, 5vw, 3.6rem); line-height: 1.08; letter-spacing: -0.01em; max-width: 18ch; text-wrap: balance; }
+.pg-hero h1 em { font-style: normal; color: var(--accent); }
+.pg-hero .lede { color: var(--nevoa); max-width: 60ch; font-size: clamp(1.02rem, 1.5vw, 1.15rem); line-height: 1.65; margin: 20px 0 32px; }
+.pg-hero .ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+.pg-hero-mark {
+  position: absolute; right: -60px; bottom: -80px; width: min(520px, 60vw); height: min(520px, 60vw);
+  background: url('/brand/seven-simbolo-areia.svg') center/contain no-repeat; opacity: .12; pointer-events: none;
+}
+.pg-highlights { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; margin-top: clamp(40px, 6vw, 64px); background: var(--complementar-1); border-top: 1px solid var(--complementar-1); }
+.pg-highlights > div { background: var(--surface-brand); padding: 20px 20px 4px 0; }
+.pg-highlights strong { display: block; font-size: clamp(1.25rem, 2.4vw, 1.6rem); font-weight: 700; color: var(--accent); line-height: 1.2; }
+.pg-highlights span { display: block; margin-top: 4px; font-size: .9rem; line-height: 1.45; color: var(--complementar-2); }
+@media (max-width: 760px) { .pg-highlights { grid-template-columns: 1fr 1fr; } }
+
+/* ---- Migalhas ---- */
+.crumbs { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin-bottom: 22px; font-size: 13px; color: var(--complementar-2); }
+.crumbs a { color: var(--complementar-2); border-bottom: 1px solid transparent; }
+.crumbs a:hover { color: var(--accent); border-color: var(--accent); }
+.crumbs li + li::before { content: '/'; margin-right: 8px; color: var(--complementar-1); }
+.crumbs--light, .crumbs--light a { color: var(--ink-muted); }
+.crumbs--light li + li::before { color: var(--complementar-2); }
+
+/* ---- Cabeçalho de seção alinhado à esquerda ---- */
+.sec-head { max-width: 760px; margin-bottom: clamp(28px, 4vw, 48px); }
+.sec-head h2 { font-size: clamp(1.7rem, 3.4vw, 2.5rem); text-wrap: balance; }
+.sec-head .lead { margin-top: 14px; }
+
+/* ---- Cartões de texto (para quem é / o que a gente faz) ---- */
+.tiles { display: grid; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.tiles-2 { grid-template-columns: repeat(2, 1fr); }
+.tiles-3 { grid-template-columns: repeat(3, 1fr); }
+.tile { background: var(--surface); padding: clamp(22px, 3vw, 32px); }
+.bg-off .tile { background: var(--surface); }
+.tile h3 { font-size: 1.15rem; margin-bottom: 10px; }
+.tile p { color: var(--ink); font-size: .96rem; line-height: 1.65; }
+@media (max-width: 900px) { .tiles-3 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 620px) { .tiles-2, .tiles-3 { grid-template-columns: 1fr; } }
+
+/* ---- Passos numerados (Principle do design system) ---- */
+.steps-list { list-style: none; counter-reset: step; max-width: 860px; }
+.steps-list li { display: grid; grid-template-columns: 72px 1fr; gap: 16px; padding: 24px 0; border-bottom: 1px solid var(--border-strong); }
+.steps-list li:first-child { border-top: 1px solid var(--border-strong); }
+.steps-list .n { font-size: 28px; line-height: 36px; font-weight: 600; color: var(--heading); }
+.steps-list h3 { font-size: 1.15rem; text-transform: uppercase; letter-spacing: 0.02em; }
+.steps-list p { margin-top: 6px; color: var(--ink-muted); line-height: 1.65; }
+
+/* ---- Dicionário da SEVEN ---- */
+.dict { background: var(--surface-warm); padding: clamp(22px, 3vw, 32px); }
+.dict h2 { font-size: 13px; line-height: 16px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--heading); margin-bottom: 14px; }
+.dict dl { display: grid; grid-template-columns: max-content 1fr; gap: 10px 20px; }
+.dict dt { font-weight: 600; color: var(--heading); }
+.dict dd { color: var(--ink); }
+@media (max-width: 520px) { .dict dl { grid-template-columns: 1fr; gap: 2px; } .dict dd { margin-bottom: 10px; } }
+
+/* ---- Caixa "Importante" ---- */
+.notice { background: var(--surface-warm); border-left: 4px solid var(--heading); padding: clamp(22px, 3vw, 32px); max-width: 860px; }
+.notice h3 { font-size: 1.1rem; margin-bottom: 8px; }
+.notice p { line-height: 1.7; }
+
+/* ---- Indicação externa ---- */
+.ext { display: flex; gap: 24px; align-items: center; justify-content: space-between; flex-wrap: wrap; border: 1px solid var(--border-strong); padding: clamp(22px, 3vw, 32px); max-width: 860px; }
+.ext h3 { font-size: 1.1rem; margin-bottom: 6px; }
+.ext p { color: var(--ink-muted); max-width: 56ch; }
+
+/* ---- FAQ ---- */
+.faq-list { max-width: 860px; border-top: 1px solid var(--border-strong); }
+.faq-list details { border-bottom: 1px solid var(--border-strong); }
+.faq-list summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; cursor: pointer; list-style: none; padding: 20px 0; font-weight: 600; font-size: 1.04rem; color: var(--heading); }
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary::after { content: '+'; flex: none; font-size: 1.5rem; font-weight: 400; line-height: 1; color: var(--heading); transition: transform var(--dur-base) var(--ease-out); }
+.faq-list details[open] summary::after { transform: rotate(45deg); }
+.faq-list .a { padding: 0 0 22px; color: var(--ink); line-height: 1.75; max-width: 72ch; }
+
+/* ---- Cartões de link (soluções relacionadas, hub) ---- */
+.link-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+.link-card { display: flex; flex-direction: column; gap: 8px; padding: 24px; background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--heading); transition: border-color var(--dur-base) var(--ease-out), background var(--dur-base) var(--ease-out); }
+.link-card:hover { border-color: var(--border-strong); background: var(--surface-alt); }
+.link-card h3 { font-size: 1.1rem; }
+.link-card p { color: var(--ink-muted); font-size: .94rem; line-height: 1.6; }
+.link-card .go { margin-top: auto; padding-top: 8px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--heading); }
+.bg-off .link-card { background: var(--surface); }
+
+/* ---- Faixa de assinatura (Statement) ---- */
+.sign-band { background: var(--surface-brand); padding: clamp(56px, 8vw, 96px) 0; }
+.sign-band .statement { font-weight: 700; text-transform: uppercase; font-size: clamp(1.8rem, 4.6vw, 3.4rem); line-height: 1.05; color: var(--on-brand); max-width: 16ch; }
+.sign-band h2 { color: var(--branco); font-size: clamp(1.4rem, 2.6vw, 1.9rem); margin-top: 28px; }
+.sign-band p { color: var(--nevoa); max-width: 56ch; margin-top: 12px; line-height: 1.65; }
+.sign-band .ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+
+/* ---- Texto longo (blog, podcast) ---- */
+.prose { max-width: 720px; font-size: 1.05rem; line-height: 1.8; color: var(--ink); }
+.prose > * + * { margin-top: 1.1em; }
+.prose h2 { font-size: clamp(1.4rem, 2.6vw, 1.75rem); margin-top: 2em; }
+.prose h3 { font-size: 1.2rem; margin-top: 1.6em; }
+.prose ul, .prose ol { padding-left: 1.3em; }
+.prose li + li { margin-top: .4em; }
+.prose a { color: var(--heading); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--complementar-2); }
+.prose a:hover { text-decoration-color: var(--heading); }
+.prose blockquote { border-left: 3px solid var(--accent); padding-left: 18px; color: var(--ink-muted); }
+.prose strong { color: var(--heading); }
+.prose table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+.prose th, .prose td { border-bottom: 1px solid var(--border-strong); padding: 10px 8px; text-align: left; }
+.meta-line { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--complementar-2); }

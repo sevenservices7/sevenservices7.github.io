@@ -1,15 +1,13 @@
 ---
 import { useTranslations, getRoute, type Lang } from '../../i18n/ui';
-import { getOffices, getServices } from '../../lib/data';
+import { getOffices } from '../../lib/data';
 import UnitCard from '../UnitCard.astro';
-import ServiceCard from '../ServiceCard.astro';
 import TrustBadges from '../TrustBadges.astro';
 
 interface Props { lang: Lang; }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const offices = await getOffices();
-const services = await getServices(6);
 
 const copy = {
   pt: {
@@ -91,7 +89,7 @@ const copy = {
     <p class="hero-lede">{t('home.hero.subtitle')}</p>
     <div class="hero-ctas">
       <button class="btn btn-gold" data-open-attendance>{t('home.hero.ctaPrimary')}</button>
-      <a href={getRoute('services', lang)} class="btn btn-light">{t('home.hero.ctaSecondary')}</a>
+      <a href={getRoute('about', lang)} class="btn btn-light">{t('home.about.more')}</a>
     </div>
   </div>
   <div class="hero-mark" aria-hidden="true"></div>
@@ -110,23 +108,6 @@ const copy = {
     </div>
     <div class="center" style="margin-top:28px">
       <button class="btn btn-ghost" data-open-attendance>{t('common.onlineService')}</button>
-    </div>
-  </div>
-</section>
-
-<!-- SERVIÇOS -->
-<section class="bg-white">
-  <div class="container">
-    <div class="section-head center">
-      <span class="eyebrow">{t('home.services.eyebrow')}</span>
-      <h2>{t('home.services.title')}</h2>
-      <p class="lead">{t('home.services.subtitle')}</p>
-    </div>
-    <div class="grid cols-3">
-      {services.map((s) => <ServiceCard service={s} lang={lang} />)}
-    </div>
-    <div class="center" style="margin-top:32px">
-      <a href={getRoute('services', lang)} class="btn btn-ghost">{t('home.services.all')}</a>
     </div>
   </div>
 </section>

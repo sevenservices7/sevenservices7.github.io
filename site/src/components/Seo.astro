@@ -1,5 +1,6 @@
 ---
 import { getRoute, type Lang, type RouteKey } from '../i18n/ui';
+import { getOffices } from '../lib/data';
 
 interface Props {
   title: string;
@@ -7,28 +8,67 @@ interface Props {
   lang: Lang;
   routeKey?: RouteKey;
   ogImage?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  /** Blocos JSON-LD extra desta página (Service, FAQPage, BreadcrumbList, Article…). */
+  jsonLd?: Record<string, unknown>[];
 }
-const { title, description, lang, routeKey, ogImage = '/assets/social/og-image.jpg' } = Astro.props;
+const { title, description, lang, routeKey, ogImage = '/brand/og-image.png', ogType = 'website', noindex = false, jsonLd = [] } = Astro.props;
 const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://sevenservicess.com';
-const ogLocale = lang === 'pt' ? 'pt_PT' : lang === 'es' ? 'es_ES' : 'en_GB';
+const ogLocale = lang === 'pt' ? 'pt_BR' : lang === 'es' ? 'es_ES' : 'en_GB';
+const hreflang = { pt: 'pt-BR', en: 'en', es: 'es' } as const;
+const canonical = site + Astro.url.pathname;
 
 // Alternates hreflang quando a rota é conhecida nos 3 idiomas.
 const alternates = routeKey
-  ? (['pt', 'en', 'es'] as Lang[]).map((l) => ({ lang: l, href: site + getRoute(routeKey, l) }))
+  ? (['pt', 'en', 'es'] as Lang[]).map((l) => ({ lang: hreflang[l], href: site + getRoute(routeKey, l) }))
   : [];
+
+// Organização + unidades (LocalBusiness) em todas as páginas.
+const offices = await getOffices();
+const org = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  '@id': `${site}/#organization`,
+  name: 'SEVEN',
+  legalName: 'SANTOS JESUS Unipessoal Lda',
+  url: site + '/',
+  logo: `${site}/brand/seven-simbolo-oceano.svg`,
+  image: `${site}/brand/og-image.png`,
+  slogan: 'Transformando complexidade em caminho. Clareza para ir além.',
+  description: 'Assessoria especialista em imigração, empresas e contabilidade para brasileiros em Portugal.',
+  areaServed: [{ '@type': 'Country', name: 'Portugal' }, { '@type': 'Country', name: 'Brasil' }],
+  knowsLanguage: ['pt-BR', 'pt-PT', 'en', 'es'],
+  aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', reviewCount: '178', bestRating: '5' },
+  department: offices.filter((o) => o.is_open).map((o) => ({
+    '@type': 'ProfessionalService',
+    name: `SEVEN ${o.name}`,
+    address: { '@type': 'PostalAddress', streetAddress: o.address, addressLocality: o.name, addressCountry: 'PT' },
+    ...(o.lat && o.lng ? { geo: { '@type': 'GeoCoordinates', latitude: o.lat, longitude: o.lng } } : {}),
+    ...(o.whatsapp ? { telephone: '+' + o.whatsapp } : {}),
+    url: `${site}/unidades/${o.slug}`,
+  })),
+};
+const blocks = [org, ...jsonLd];
 ---
 <title>{title}</title>
 <meta name="description" content={description} />
-<link rel="canonical" href={site + Astro.url.pathname} />
+{noindex && <meta name="robots" content="noindex, follow" />}
+<link rel="canonical" href={canonical} />
 {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
 {alternates.length > 0 && <link rel="alternate" hreflang="x-default" href={site + getRoute(routeKey!, 'pt')} />}
 
-<meta property="og:type" content="website" />
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content="SEVEN" />
+<meta property="og:url" content={canonical} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={site + ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 <meta property="og:locale" content={ogLocale} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={site + ogImage} />
+{blocks.map((b) => <script type="application/ld+json" set:html={JSON.stringify(b)} />)}

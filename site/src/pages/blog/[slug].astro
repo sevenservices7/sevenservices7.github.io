@@ -1,0 +1,76 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getSolution } from '../../data/solucoes';
+import type { Solution } from '../../data/solution-types';
+import { articleLd, breadcrumbLd } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+interface Props { post: CollectionEntry<'blog'> }
+const { post } = Astro.props;
+const { Content } = await render(post);
+const d = post.data;
+const path = `/blog/${post.id}`;
+const related = d.related.map(getSolution).filter((x): x is Solution => Boolean(x));
+const dateFmt = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+---
+<Base
+  title={`${d.title} | SEVEN`}
+  description={d.description}
+  ogType="article"
+  noindex={d.draft}
+  jsonLd={[
+    articleLd({ title: d.title, description: d.description, path, pubDate: d.pubDate, updatedDate: d.updatedDate, author: d.author }),
+    breadcrumbLd([{ name: 'Início', path: '/' }, { name: 'Blog', path: '/blog' }, { name: d.title, path }]),
+  ]}
+>
+  {d.draft && <div class="draft-bar">Rascunho em revisão: esta página não aparece no Google nem na lista do blog.</div>}
+  <article>
+    <header class="bg-off post-head">
+      <div class="container" style="max-width:820px">
+        <nav aria-label="Você está em"><ol class="crumbs crumbs--light"><li><a href="/">Início</a></li><li><a href="/blog">Blog</a></li></ol></nav>
+        <h1>{d.title}</h1>
+        <p class="lead" style="margin-top:16px">{d.description}</p>
+        <p class="meta-line" style="margin-top:20px;color:var(--ink-muted)">
+          {d.author} · <time datetime={d.pubDate.toISOString()}>{dateFmt.format(d.pubDate)}</time>
+          {d.updatedDate && <> · atualizado em <time datetime={d.updatedDate.toISOString()}>{dateFmt.format(d.updatedDate)}</time></>}
+        </p>
+      </div>
+    </header>
+    <section class="bg-white">
+      <div class="container" style="max-width:820px">
+        <div class="prose"><Content /></div>
+      </div>
+    </section>
+  </article>
+
+  {related.length > 0 && (
+    <section class="bg-off">
+      <div class="container">
+        <div class="sec-head"><span class="eyebrow">Para resolver</span><h2>A gente cuida disso para você.</h2></div>
+        <div class="link-cards">
+          {related.map((r) => <a href={`/${r.slug}`} class="link-card"><h3>{r.navLabel}</h3><p>{r.cardSummary}</p><span class="go">Saiba mais</span></a>)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="sign-band">
+    <div class="container">
+      <p class="statement">Sempre existe um caminho.</p>
+      <h2>Cada caso tem os seus detalhes.</h2>
+      <p>Este artigo explica a regra geral. Para saber o que vale para você, fale com um especialista da SEVEN.</p>
+      <div class="ctas"><a href="/agendamento" class="btn btn-gold">Falar com um especialista</a></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .post-head { padding-block: clamp(48px, 7vw, 88px) clamp(32px, 5vw, 56px); }
+  .post-head h1 { font-size: clamp(2rem, 4.4vw, 3rem); text-wrap: balance; }
+  .draft-bar { background: var(--surface-warm); color: var(--heading); text-align: center; padding: 10px 16px; font-size: .9rem; font-weight: 600; }
+</style>
