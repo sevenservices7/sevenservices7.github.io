@@ -13,7 +13,7 @@ const offices = await getOffices();
     <button class="ovl-x" data-close aria-label="Fechar">&times;</button>
 
     <div class="ovl-head">
-      <img src="/assets/logos/seven-icon.png" alt="" height="44" class="ovl-icon" />
+      <img src="/brand/seven-simbolo-oceano.svg" alt="" height="44" width="41" class="ovl-icon" />
       <span class="eyebrow">{t('overlay.eyebrow')}</span>
       <h2 id="ovl-title">{t('overlay.title')}</h2>
       <p class="lead">{t('overlay.subtitle')}</p>
@@ -33,15 +33,15 @@ const offices = await getOffices();
 <style>
   .ovl {
     position: fixed; inset: 0; z-index: 200;
-    background: rgba(7,20,50,.62); backdrop-filter: blur(6px);
+    background: rgba(1,32,63,.72);
     display: flex; align-items: center; justify-content: center;
     padding: clamp(12px, 4vw, 40px); overflow-y: auto;
   }
   .ovl[hidden] { display: none; }
   .ovl-panel {
     position: relative; width: 100%; max-width: 1040px;
-    background: var(--off); border-radius: var(--r-2xl);
-    box-shadow: var(--shadow-xl); padding: clamp(24px, 4vw, 48px);
+    background: var(--surface-alt);
+    border-top: 4px solid var(--accent); padding: clamp(24px, 4vw, 48px);
     animation: ovl-in .25s ease;
   }
   @keyframes ovl-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }

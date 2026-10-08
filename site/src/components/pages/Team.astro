@@ -84,11 +84,11 @@ const f = info(founder?.code ?? '');
   .founder-photo {
     width: 168px; height: 168px; border-radius: 50%; overflow: hidden; flex: none;
     background: var(--grad-navy); display: flex; align-items: center; justify-content: center;
-    box-shadow: var(--shadow-md); border: 3px solid var(--g1);
+    border: 3px solid var(--accent);
   }
   .founder-photo img { width: 100%; height: 100%; object-fit: cover; }
   .founder-initials { font-family: var(--font-head); font-weight: 700; font-size: 3rem; color: var(--g1); }
   .founder-langs { font-family: var(--font-head); font-size: .74rem; text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--g0); margin: 6px 0 0; }
-  .team-closing { margin-top: 40px; font-family: var(--font-head); font-style: italic; font-weight: 300; font-size: clamp(1.1rem, 2.2vw, 1.4rem); color: var(--seven-navy-deep); max-width: 720px; margin-inline: auto; }
+  .team-closing { margin-top: 40px; font-family: var(--font-head); font-weight: 500; font-size: clamp(1.1rem, 2.2vw, 1.35rem); color: var(--heading); max-width: 720px; margin-inline: auto; }
   @media (max-width: 680px) { .founder-block { grid-template-columns: 1fr; text-align: center; justify-items: center; } }
 </style>

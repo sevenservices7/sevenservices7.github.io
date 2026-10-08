@@ -189,42 +189,41 @@ const copy = {
 </section>
 
 <style>
-  .hero { position: relative; overflow: hidden; background: var(--grad-navy); color: #fff; padding: clamp(72px, 11vw, 120px) 0; }
+  .hero { position: relative; overflow: hidden; background: var(--surface-brand); color: var(--nevoa); padding: clamp(72px, 11vw, 128px) 0; }
   .hero-in { position: relative; z-index: 1; }
-  .hero h1 { color: #fff; font-size: clamp(2.6rem, 6vw, 4.75rem); line-height: 1.04; letter-spacing: -0.015em; max-width: 14ch; text-wrap: balance; }
-  .hero h1 em { font-style: italic; font-weight: 300; color: var(--g1); }
-  .hero-lede { color: rgba(255,255,255,.8); max-width: 560px; font-size: clamp(1.05rem, 1.6vw, 1.2rem); margin: 24px 0 36px; line-height: 1.55; }
+  .hero h1 { color: var(--branco); font-weight: 700; font-size: clamp(2.4rem, 5.6vw, 4.25rem); line-height: 1.06; letter-spacing: -0.01em; max-width: 15ch; text-wrap: balance; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero-lede { color: var(--nevoa); max-width: 560px; font-size: clamp(1.05rem, 1.6vw, 1.2rem); margin: 24px 0 36px; line-height: 1.55; }
   .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
   .hero-mark {
-    position: absolute; right: -90px; bottom: -90px; width: min(620px, 70vw); height: min(620px, 70vw);
-    background: url('/brand/logo_isotype_white_gold.png') center/contain no-repeat; opacity: .2;
-    pointer-events: none; filter: drop-shadow(0 20px 60px rgba(0,0,0,.35));
+    position: absolute; right: -60px; bottom: -80px; width: min(560px, 62vw); height: min(560px, 62vw);
+    background: url('/brand/seven-simbolo-areia.svg') center/contain no-repeat; opacity: .14;
+    pointer-events: none;
   }
 
   .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
   .step { padding-top: 56px; position: relative; }
-  .step-num { position: absolute; top: 0; left: 0; font-family: var(--font-head); font-weight: 300; font-style: italic; font-size: 3.6rem; line-height: 1; color: var(--g2); opacity: .9; }
+  .step-num { position: absolute; top: 0; left: 0; font-family: var(--font-head); font-weight: 600; font-size: 28px; line-height: 36px; color: var(--heading); padding-bottom: 6px; border-bottom: 3px solid var(--accent); }
   .step h4 { font-weight: 600; text-transform: uppercase; letter-spacing: var(--tracking-wide); font-size: .9rem; margin-bottom: 8px; }
-  .step p { color: var(--seven-muted); font-size: .92rem; line-height: 1.55; }
+  .step p { color: var(--ink-muted); font-size: .92rem; line-height: 1.55; }
 
   .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
   .stat {
-    background: var(--seven-white); border: 1px solid var(--seven-line); border-left: 3px solid var(--g1);
-    border-radius: var(--r-lg); padding: 22px 24px; box-shadow: var(--shadow-sm);
-    font-family: var(--font-head); font-weight: 500; font-size: 1.02rem; line-height: 1.35; color: var(--seven-navy-deep);
+    background: var(--surface-alt); border-top: 3px solid var(--heading);
+    padding: var(--space-6); font-family: var(--font-head); font-weight: 500; font-size: 1.02rem; line-height: 1.45; color: var(--heading);
   }
-  .stats-note { margin-top: 22px; color: var(--seven-muted); font-size: .92rem; }
+  .stats-note { margin-top: 22px; color: var(--ink-muted); font-size: .92rem; }
 
-  .testimonial { background: var(--seven-navy-deep); color: #fff; padding: clamp(64px, 9vw, 104px) 0; }
+  .testimonial { background: var(--surface-brand); color: var(--nevoa); padding: clamp(64px, 9vw, 104px) 0; }
   .tgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .tcard { margin: 0; display: flex; flex-direction: column; gap: 18px; padding: 28px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.12); border-radius: var(--r-lg); }
-  .tcard blockquote { font-family: var(--font-head); font-weight: 300; font-style: italic; font-size: 1.12rem; line-height: 1.45; margin: 0; color: #fff; }
-  .tcard blockquote::before { content: '“'; color: var(--g1); }
-  .tcard blockquote::after { content: '”'; color: var(--g1); }
-  .tcard .who { margin-top: auto; font-family: var(--font-head); font-weight: 500; font-size: .74rem; text-transform: uppercase; letter-spacing: var(--tracking-widest); color: var(--g1); }
+  .tcard { margin: 0; display: flex; flex-direction: column; gap: 18px; padding: 28px; background: var(--complementar-1); }
+  .tcard blockquote { font-family: var(--font-head); font-weight: 400; font-size: 1.05rem; line-height: 1.6; margin: 0; color: var(--nevoa); }
+  .tcard blockquote::before { content: '“'; color: var(--accent); }
+  .tcard blockquote::after { content: '”'; color: var(--accent); }
+  .tcard .who { margin-top: auto; font-family: var(--font-head); font-weight: 500; font-size: 13px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent); }
 
   .cta-band { padding-block: clamp(56px, 8vw, 90px); }
-  .closing-line { font-family: var(--font-head); font-weight: 300; font-style: italic; font-size: clamp(1.4rem, 3vw, 2.1rem); color: var(--g1); margin-bottom: 22px; }
+  .closing-line { font-family: var(--font-head); font-weight: 700; text-transform: uppercase; font-size: clamp(1.5rem, 3.4vw, 2.5rem); line-height: 1.1; color: var(--on-brand); margin-bottom: 28px; }
 
   @media (max-width: 860px) { .steps { grid-template-columns: 1fr 1fr; gap: 32px; } .stats { grid-template-columns: 1fr 1fr; } .tgrid { grid-template-columns: 1fr; } }
   @media (max-width: 480px) { .steps { grid-template-columns: 1fr; } .stats { grid-template-columns: 1fr; } }
