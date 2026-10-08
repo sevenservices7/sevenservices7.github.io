@@ -19,7 +19,8 @@
 .pg-highlights > div { background: var(--surface-brand); padding: 20px 20px 4px 0; }
 .pg-highlights strong { display: block; font-size: clamp(1.25rem, 2.4vw, 1.6rem); font-weight: 700; color: var(--accent); line-height: 1.2; }
 .pg-highlights span { display: block; margin-top: 4px; font-size: .9rem; line-height: 1.45; color: var(--complementar-2); }
-@media (max-width: 760px) { .pg-highlights { grid-template-columns: 1fr 1fr; } }
+.pg-highlights > div + div { padding-left: 20px; }
+@media (max-width: 760px) { .pg-highlights { grid-template-columns: 1fr 1fr; } .pg-highlights > div:nth-child(odd) { padding-left: 0; } .pg-highlights > div:nth-child(even) { padding-left: 16px; } }
 
 /* ---- Migalhas ---- */
 .crumbs { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin-bottom: 22px; font-size: 13px; color: var(--complementar-2); }

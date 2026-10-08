@@ -39,7 +39,7 @@ const jsonLd = [
     <section class={i % 2 ? 'bg-off' : 'bg-white'} id={st.id}>
       <div class="container">
         <div class="sec-head">
-          <span class="eyebrow">Etapa {st.step}</span>
+          <span class="eyebrow">{st.step === '+' ? 'Em qualquer etapa' : `Etapa ${st.step}`}</span>
           <h2>{st.title}</h2>
           <p class="lead">{st.summary}</p>
         </div>

@@ -4,7 +4,7 @@ export const solution: Solution = {
   slug: 'advogada-de-imigracao',
   stage: 'apoio',
   navLabel: 'Advogada de imigração',
-  cardSummary: 'Indeferimento, audiência prévia, demora da AIMA ou caso complexo: a advogada da equipe analisa e mostra o caminho.',
+  cardSummary: 'Indeferimento, audiência prévia ou demora da AIMA: a advogada da equipe analisa e mostra o caminho.',
   seoTitle: 'Advogada de imigração em Portugal | SEVEN',
   metaDescription:
     'Recebeu um indeferimento, uma audiência prévia ou está parado na AIMA? A advogada da SEVEN analisa o seu caso e mostra o caminho jurídico, dentro da lei.',
