@@ -1,6 +1,9 @@
-// Origens autorizadas do site. O GitHub Pages serve o CNAME sevenservicess.com;
+// Origens autorizadas do site. O GitHub Pages serve o CNAME seveneu.com;
 // SITE_ORIGIN (lista separada por vírgulas) acrescenta origens extra sem redeploy.
 const DEFAULTS = [
+  'https://seveneu.com',
+  'https://www.seveneu.com',
+  // Domínio antigo, mantido durante a transição (redireciona para seveneu.com).
   'https://sevenservicess.com',
   'https://www.sevenservicess.com',
   'https://sevenservices7.github.io',

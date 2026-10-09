@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sevenservicess.com/sitemap-index.xml
+Sitemap: https://seveneu.com/sitemap-index.xml

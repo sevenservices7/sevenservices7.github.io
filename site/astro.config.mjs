@@ -18,7 +18,7 @@ const redirectPaths = ['/servicos/', '/carrinho/', '/en/services/', '/en/cart/',
 // i18n: PT é o idioma padrão e fica nas URLs limpas (/, /sobre, ...).
 // EN/ES ficam prefixados (/en/..., /es/...).
 export default defineConfig({
-  site: 'https://sevenservicess.com',
+  site: 'https://seveneu.com',
   trailingSlash: 'ignore',
   i18n: {
     defaultLocale: 'pt',

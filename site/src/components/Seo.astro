@@ -14,7 +14,7 @@ interface Props {
   jsonLd?: Record<string, unknown>[];
 }
 const { title, description, lang, routeKey, ogImage = '/brand/og-image.png', ogType = 'website', noindex = false, jsonLd = [] } = Astro.props;
-const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://sevenservicess.com';
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://seveneu.com';
 const ogLocale = lang === 'pt' ? 'pt_BR' : lang === 'es' ? 'es_ES' : 'en_GB';
 const hreflang = { pt: 'pt-BR', en: 'en', es: 'es' } as const;
 const canonical = site + Astro.url.pathname;

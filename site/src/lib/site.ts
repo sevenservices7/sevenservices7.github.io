@@ -1,6 +1,6 @@
 import { getOffices } from './data';
 
-export const SITE_URL = 'https://sevenservicess.com';
+export const SITE_URL = 'https://seveneu.com';
 
 /** WhatsApp principal da SEVEN (primeira unidade ativa). */
 export async function mainWhatsapp(): Promise<string> {
