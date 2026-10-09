@@ -12,7 +12,7 @@ const draftPaths = ['blog', 'podcast'].flatMap((col) => {
     .filter((f) => /^draft:\s*true\s*$/m.test(readFileSync(new URL(f, dir), 'utf8')))
     .map((f) => `/${col}/${f.replace(/\.md$/, '')}/`);
 });
-const redirectPaths = ['/servicos/', '/carrinho/', '/en/services/', '/en/cart/', '/es/servicios/', '/es/carrito/'];
+const redirectPaths = ['/lander/', '/servicos/', '/carrinho/', '/en/services/', '/en/cart/', '/es/servicios/', '/es/carrito/'];
 
 // Site institucional SEVEN.
 // i18n: PT é o idioma padrão e fica nas URLs limpas (/, /sobre, ...).
@@ -30,6 +30,7 @@ export default defineConfig({
   },
   // Páginas antigas (catálogo e carrinho) → destinos novos. Geram HTML de redirecionamento com noindex.
   redirects: {
+    '/lander': '/',
     '/servicos': '/solucoes',
     '/carrinho': '/solucoes',
     '/en/services': '/en/',
