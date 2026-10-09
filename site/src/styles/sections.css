@@ -111,3 +111,12 @@
 .prose table { border-collapse: collapse; width: 100%; font-size: .95rem; }
 .prose th, .prose td { border-bottom: 1px solid var(--border-strong); padding: 10px 8px; text-align: left; }
 .meta-line { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--complementar-2); }
+
+/* ---- Transcrição recolhida (podcast): fica na página para o Google, abre só no clique ---- */
+.prose details.transcript { margin-top: 2.2em; border-top: 1px solid var(--border-strong); border-bottom: 1px solid var(--border-strong); }
+.prose details.transcript > summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; font-weight: 600; color: var(--heading); }
+.prose details.transcript > summary::-webkit-details-marker { display: none; }
+.prose details.transcript > summary::after { content: '+'; font-size: 1.5rem; font-weight: 400; line-height: 1; transition: transform var(--dur-base) var(--ease-out); }
+.prose details.transcript[open] > summary::after { transform: rotate(45deg); }
+.prose details.transcript > :not(summary) { font-size: .95rem; color: var(--ink-muted); }
+.prose details.transcript > :last-child { padding-bottom: 24px; }

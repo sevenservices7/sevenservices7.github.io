@@ -27,8 +27,13 @@ Dois ou três parágrafos resumindo a conversa e os principais pontos.
 - Ponto 1
 - Ponto 2
 
-## Transcrição
+<details class="transcript">
+<summary>Ver transcrição completa</summary>
 
 **Danilo:** ...
 
 **Convidado:** ...
+
+</details>
+
+(O bloco <details> deixa a transcrição recolhida: o Google lê, mas o visitante só vê se clicar.)

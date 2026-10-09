@@ -25,7 +25,8 @@ No final, a conversa toma um rumo mais pessoal e direto: um recado para quem hoj
 - Os trabalhos que vieram antes da SEVEN e como a pandemia virou o negócio de cabeça para baixo.
 - Um recado direto para quem sonha em imigrar ou empreender fora do Brasil, sem romantizar.
 
-## Transcrição
+<details class="transcript">
+<summary>Ver transcrição completa</summary>
 
 *Transcrição gerada a partir das legendas automáticas do YouTube. Pode conter pequenos erros de reconhecimento de fala. Clique no horário para ir direto àquele trecho do vídeo.*
 
@@ -299,3 +300,4 @@ No final, a conversa toma um rumo mais pessoal e direto: um recado para quem hoj
 
 [**45:14**](https://www.youtube.com/watch?v=iYl2HYRxwE8&t=2714s) deixem bastante perguntas, pode criticar, tá? A minha postura aqui, se o Danilo deve me convidar mais uma vez, se o Danilo foi bem, se ele foi mal, que a gente quiser melhorar. Você quer ter ela como convidada pra gente agora? Tá invertido. Gente, só falo besteira, não vale a pena, tá? Não vale a pena. Tá aqui, Danilo. Agradeço. Agradeço mesmo. No fundo do meu coração. Agora faz o Pix, patrão. [risadas] Gente, muito obrigada, muito obrigada mesmo por ter confiado em mim. Mesmo eu aqui bem insegura, não parece, mas eu sou uma pessoa assim bem bem nervosa, bem tensa. Tô muito feliz de ter participado disso aqui. Espero que seja uma bção. Compartilhem, mostra bem meu rostinho. Não pelo Danilo, tá? Por mim, por mim mesmo. [risadas] Obrigadíssima e contamos com você. Beijinho, gente. Agora até mais. Cia. Ciao.
 
+</details>

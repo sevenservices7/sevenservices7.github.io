@@ -30,22 +30,22 @@ const videoLd = {
   contentUrl: `https://www.youtube.com/watch?v=${d.youtubeId}`,
   inLanguage: 'pt-BR',
   publisher: { '@id': `${SITE_URL}/#organization` },
-  partOfSeries: { '@type': 'PodcastSeries', name: 'SEVEN Cast', url: `${SITE_URL}/podcast` },
+  partOfSeries: { '@type': 'PodcastSeries', name: 'Podcast SEVEN', url: `${SITE_URL}/podcast` },
 };
 ---
 <Base
-  title={`${d.title} | SEVEN Cast`}
+  title={`${d.title} | Podcast SEVEN`}
   description={d.description}
   ogType="article"
   ogImage={undefined}
   noindex={d.draft}
-  jsonLd={[videoLd, breadcrumbLd([{ name: 'Início', path: '/' }, { name: 'SEVEN Cast', path: '/podcast' }, { name: d.title, path }])]}
+  jsonLd={[videoLd, breadcrumbLd([{ name: 'Início', path: '/' }, { name: 'Podcast', path: '/podcast' }, { name: d.title, path }])]}
 >
   <article>
     <header class="pg-hero ep-head">
       <div class="container" style="max-width:960px">
-        <nav aria-label="Você está em"><ol class="crumbs"><li><a href="/">Início</a></li><li><a href="/podcast">SEVEN Cast</a></li></ol></nav>
-        <span class="eyebrow">{d.episode !== undefined ? `Episódio ${String(d.episode).padStart(2, '0')}` : 'SEVEN Cast'}</span>
+        <nav aria-label="Você está em"><ol class="crumbs"><li><a href="/">Início</a></li><li><a href="/podcast">Podcast</a></li></ol></nav>
+        <span class="eyebrow">{d.episode !== undefined ? `Episódio ${String(d.episode).padStart(2, '0')}` : 'Podcast'}</span>
         <h1>{d.title}</h1>
         <p class="lede">{d.description}</p>
         <p class="meta-line">

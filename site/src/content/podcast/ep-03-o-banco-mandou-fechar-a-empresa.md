@@ -25,7 +25,8 @@ Na parte empresarial, Mayck revela como a Glória Assertiva nasceu em 2019 como 
 - As novas regras que aumentaram o prazo para pedir a cidadania.
 - Como a empresa nasceu no TVDE, quase fechou no primeiro ano e se reinventou na construção.
 
-## Transcrição
+<details class="transcript">
+<summary>Ver transcrição completa</summary>
 
 *Transcrição gerada a partir das legendas automáticas do YouTube. Pode conter pequenos erros de reconhecimento de fala. Clique no horário para ir direto àquele trecho do vídeo.*
 
@@ -803,3 +804,4 @@ Na parte empresarial, Mayck revela como a Glória Assertiva nasceu em 2019 como 
 
 [**1:22:48**](https://www.youtube.com/watch?v=MtnJXrRESCI&t=4968s) curtir o vídeo e também de qual empreendedor de qual área você quer ver aqui na SEVEN Cast. Muito obrigado por nos assistir. Até a próxima. Pessoal, não esquece de nos seguir lá, ó, gloriassertiva obrasgarves.com.
 
+</details>

@@ -25,7 +25,8 @@ Se você é barbeiro, sonha em abrir sua empresa ou está começando com os recu
 - Como transformar a habilidade de cortar cabelo em uma empresa.
 - Conselhos para quem está começando com os recursos que tem.
 
-## Transcrição
+<details class="transcript">
+<summary>Ver transcrição completa</summary>
 
 *Transcrição gerada a partir das legendas automáticas do YouTube. Pode conter pequenos erros de reconhecimento de fala. Clique no horário para ir direto àquele trecho do vídeo.*
 
@@ -427,3 +428,4 @@ Se você é barbeiro, sonha em abrir sua empresa ou está começando com os recu
 
 — Muito obrigado. Foi um prazer ter aqui e até a próxima, viu? Que vai ter mais. Só agradecer mesmo pela oportunidade de est compartilhando a minha história aqui, que eu acredito que assim como eu, tem milhares de pessoas que passou por isso. Eh, quem não passou para para ver um pouco como que é, quem já passou para ter aí alguma ligação também e saber que não tá sozinha. E agradecer vocês. Espero voltar aqui mais vezes para falar de outros assuntos também. que aí desejar todo sucesso para vocês também, mandar um beijo paraa minha família aí, para todo mundo e
 
+</details>

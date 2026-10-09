@@ -27,6 +27,9 @@ Hoje, mesmo vivendo em Portugal, o casal continua à frente da Franco Martins En
 - Como gerir um negócio no Brasil morando em Portugal.
 - Aprendizados de gestão e de transformar conhecimento em oportunidade.
 
-## Transcrição
+<details class="transcript">
+<summary>Ver transcrição completa</summary>
 
 A transcrição completa deste episódio entra aqui em breve. Enquanto isso, assista ao vídeo acima.
+
+</details>

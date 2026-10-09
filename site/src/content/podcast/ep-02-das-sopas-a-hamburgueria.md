@@ -31,7 +31,8 @@ No fim, Andrea ainda lança uma super proposta. Quer saber o que é? Assista at�
 - A realidade de ser imigrante em Portugal nos primeiros trabalhos.
 - Dicas de quem já viveu o caminho para quem quer empreender no Algarve.
 
-## Transcrição
+<details class="transcript">
+<summary>Ver transcrição completa</summary>
 
 *Transcrição gerada a partir das legendas automáticas do YouTube. Pode conter pequenos erros de reconhecimento de fala. Clique no horário para ir direto àquele trecho do vídeo.*
 
@@ -1431,3 +1432,4 @@ No fim, Andrea ainda lança uma super proposta. Quer saber o que é? Assista at�
 
 [**1:19:45**](https://www.youtube.com/watch?v=5UVXrm0fAQA&t=4785s) Andreia. Gente, muito obrigado. Esse é o SEVEN Cast.
 
+</details>
