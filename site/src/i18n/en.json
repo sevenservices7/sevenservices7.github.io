@@ -2,7 +2,6 @@
   "site.name": "Seven Services",
   "site.tagline": "Advisory & Consulting in Portugal",
   "brand.slogan": "Clarity to go further.",
-
   "nav.home": "Home",
   "nav.about": "About",
   "nav.team": "Team",
@@ -11,10 +10,8 @@
   "nav.legalization": "Vehicles",
   "nav.booking": "Book a consultation",
   "nav.contact": "Contact",
-
   "legalization.metaTitle": "Vehicle Legalization in Portugal",
   "legalization.metaDesc": "Imported a car into Portugal? We handle the entire legalization — ISV simulation, inspection, customs clearance, IMT registration and ownership records. End to end.",
-
   "common.whatsapp": "WhatsApp",
   "common.viewUnit": "View location",
   "common.maps": "Directions",
@@ -29,22 +26,18 @@
   "common.from": "from",
   "common.language": "Language",
   "common.backHome": "Back to home",
-
   "overlay.eyebrow": "Our locations",
   "overlay.title": "We are close to you, in Portugal",
   "overlay.subtitle": "A physical presence in strategic locations. Pick a location or talk to us online.",
-
   "home.hero.eyebrow": "Advisory & Consulting in Portugal",
   "home.hero.title": "Everything for your life in",
   "home.hero.titleEm": "Portugal.",
   "home.hero.subtitle": "Documents, residence, citizenship, taxes and legal support — all in one place.",
   "home.hero.ctaPrimary": "Talk to us",
   "home.hero.ctaSecondary": "See services",
-
   "home.units.eyebrow": "Locations",
   "home.units.title": "Where to find us",
   "home.units.subtitle": "In-person service at our locations — or online, wherever you are.",
-
   "home.services.eyebrow": "Services",
   "home.services.title": "What we handle for you",
   "home.services.subtitle": "From your NIF to a residence permit: we manage the whole process end to end.",
@@ -55,19 +48,15 @@
   "services.filterAll": "All",
   "services.seeOptions": "See options",
   "services.search": "Search service…",
-
   "home.about.eyebrow": "Who we are",
   "home.about.title": "A company built on closeness and rigour",
   "home.about.body": "Seven Services exists to simplify life for those who live, work and invest in Portugal. We combine technical rigour with a human, multilingual service.",
   "home.about.more": "About the company",
-
   "home.partners.title": "We work with the main public authorities",
-
   "home.cta.title": "Ready to start?",
   "home.cta.body": "Book a consultation in your language and pay online securely.",
   "home.cta.button": "Book now",
   "home.closing": "One team. One process. Zero surprises.",
-
   "footer.tagline": "Administrative, legal, tax and immigration advisory in Portugal.",
   "footer.company": "Company",
   "footer.units": "Locations",
@@ -76,12 +65,11 @@
   "footer.rights": "All rights reserved.",
   "footer.terms": "Terms & Conditions",
   "footer.privacy": "Privacy (GDPR)",
-
   "attendance.title": "Online service",
   "attendance.subtitle": "Fill in your details and our team will get in touch.",
   "attendance.name": "Full name",
-  "attendance.email": "Email",
-  "attendance.phone": "Phone / WhatsApp",
+  "attendance.email": "Your best email",
+  "attendance.phone": "WhatsApp",
   "attendance.unit": "Preferred location",
   "attendance.unitAuto": "No preference",
   "attendance.language": "Service language",
@@ -90,11 +78,14 @@
   "attendance.sending": "Sending…",
   "attendance.success": "Request sent! Our team will be in touch shortly.",
   "attendance.error": "Could not send. Please try again or reach us on WhatsApp.",
-
   "team.eyebrow": "Team",
   "team.title": "The people behind Seven",
   "founder.role": "Founder & CEO",
-
   "page.soon.title": "Under construction",
-  "page.soon.body": "This section will be available soon."
+  "page.soon.body": "This section will be available soon.",
+  "attendance.ddi": "Country code",
+  "attendance.ddiSearch": "Search country or code (e.g. Portugal or +351)",
+  "attendance.ddiNone": "No country found",
+  "attendance.phonePh": "Phone number, digits only",
+  "attendance.eyebrow": "Contact"
 }

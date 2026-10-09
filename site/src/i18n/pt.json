@@ -68,8 +68,8 @@
   "attendance.title": "Falar com um especialista",
   "attendance.subtitle": "Deixe seus dados e a nossa equipe entra em contato com você.",
   "attendance.name": "Nome completo",
-  "attendance.email": "E-mail",
-  "attendance.phone": "Telefone / WhatsApp",
+  "attendance.email": "Seu melhor e-mail",
+  "attendance.phone": "WhatsApp",
   "attendance.unit": "Unidade de preferência",
   "attendance.unitAuto": "Sem preferência",
   "attendance.language": "Idioma do atendimento",
@@ -89,5 +89,10 @@
   "nav.blog": "Blog",
   "nav.podcast": "Podcast",
   "footer.solutions": "Soluções",
-  "footer.content": "Conteúdo"
+  "footer.content": "Conteúdo",
+  "attendance.ddi": "País (DDI)",
+  "attendance.ddiSearch": "Buscar país ou DDI (ex.: Portugal ou +351)",
+  "attendance.ddiNone": "Nenhum país encontrado",
+  "attendance.phonePh": "Seu número de WhatsApp",
+  "attendance.eyebrow": "Atendimento"
 }

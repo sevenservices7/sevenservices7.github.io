@@ -1,17 +1,20 @@
 ---
 import { useTranslations, type Lang } from '../i18n/ui';
 import { getOffices } from '../lib/data';
+import { countryList } from '../lib/countries';
 
 interface Props { lang: Lang; }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const offices = (await getOffices()).filter((o) => o.is_open);
+const countries = countryList(lang);
+const first = countries[0];
 const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
 ---
 <div class="att" data-attendance hidden role="dialog" aria-modal="true" aria-labelledby="att-title">
   <div class="att-panel">
     <button class="att-x" data-att-close aria-label="Fechar">&times;</button>
-    <span class="eyebrow">{t('common.onlineService')}</span>
+    <span class="eyebrow">{t('attendance.eyebrow')}</span>
     <h3 id="att-title">{t('attendance.title')}</h3>
     <p class="muted">{t('attendance.subtitle')}</p>
 
@@ -19,14 +22,33 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
       <label>{t('attendance.name')}
         <input name="name" type="text" required autocomplete="name" />
       </label>
-      <div class="att-row">
-        <label>{t('attendance.email')}
-          <input name="email" type="email" required autocomplete="email" />
-        </label>
-        <label>{t('attendance.phone')}
-          <input name="phone" type="tel" required autocomplete="tel" />
-        </label>
+      <div class="att-field">
+        <span class="att-lbl" id="att-phone-lbl">{t('attendance.phone')}</span>
+        <div class="att-phone">
+          <div class="ddi" data-ddi>
+            <button type="button" class="ddi-btn" data-ddi-btn aria-haspopup="listbox" aria-expanded="false" aria-label={t('attendance.ddi')}>
+              <span data-ddi-label>{first.dial}</span><span class="ddi-iso" data-ddi-iso>{first.iso}</span>
+              <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            </button>
+            <div class="ddi-pop" data-ddi-pop hidden>
+              <input type="search" class="ddi-search" data-ddi-search placeholder={t('attendance.ddiSearch')} aria-label={t('attendance.ddiSearch')} autocomplete="off" />
+              <ul class="ddi-list" role="listbox" data-ddi-list aria-labelledby="att-phone-lbl">
+                {countries.map((c, i) => (
+                  <li role="option" tabindex="-1" data-iso={c.iso} data-dial={c.dial} data-q={`${c.name} ${c.dial} ${c.iso}`} aria-selected={i === 0 ? 'true' : 'false'} class:list={[{ 'ddi-sep': i === 1 }]}>
+                    <span class="ddi-name">{c.name}</span><span class="ddi-code">{c.dial}</span>
+                  </li>
+                ))}
+              </ul>
+              <p class="ddi-none" data-ddi-none hidden>{t('attendance.ddiNone')}</p>
+            </div>
+            <input type="hidden" name="ddi" value={first.dial} data-ddi-value />
+          </div>
+          <input name="phone" type="tel" inputmode="tel" required autocomplete="tel-national" placeholder={t('attendance.phonePh')} aria-labelledby="att-phone-lbl" />
+        </div>
       </div>
+      <label>{t('attendance.email')}
+        <input name="email" type="email" required autocomplete="email" />
+      </label>
       <div class="att-row">
         <label>{t('attendance.unit')}
           <select name="unit_slug">
@@ -83,6 +105,23 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
   .att-msg { margin: 0; font-size: .9rem; padding: 10px 12px; border-radius: var(--r-md); }
   .att-msg.ok { background: #DCFCE7; color: var(--ok); }
   .att-msg.err { background: #FEE2E2; color: var(--danger); }
+  .att-field { display: grid; gap: 6px; }
+  .att-lbl { font-size: .85rem; font-weight: 600; color: var(--t1); }
+  .att-phone { display: grid; grid-template-columns: auto 1fr; gap: 8px; }
+  .ddi { position: relative; }
+  .ddi-btn { height: 100%; display: inline-flex; align-items: center; gap: 6px; font: inherit; padding: 11px 12px; border: 1px solid var(--b2); border-radius: var(--r-md); background: var(--off); color: var(--t1); cursor: pointer; white-space: nowrap; }
+  .ddi-btn:focus-visible, .ddi-btn[aria-expanded="true"] { border-color: var(--heading); background: var(--surface); }
+  .ddi-iso { font-size: .72rem; color: var(--ink-muted); letter-spacing: .06em; }
+  .ddi-pop { position: absolute; z-index: 5; top: calc(100% + 6px); left: 0; width: min(340px, 80vw); background: var(--surface); border: 1px solid var(--border-strong); border-top: 3px solid var(--accent); padding: 8px; }
+  .ddi-pop[hidden] { display: none; }
+  .att-form .ddi-search { padding: 9px 10px; margin-bottom: 6px; }
+  .ddi-list { list-style: none; max-height: 240px; overflow-y: auto; margin: 0; padding: 0; }
+  .ddi-list li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 10px; cursor: pointer; font-size: .92rem; color: var(--t1); }
+  .ddi-list li.ddi-sep { border-bottom: 1px solid var(--border); margin-bottom: 4px; padding-bottom: 10px; }
+  .ddi-list li:hover, .ddi-list li:focus, .ddi-list li[aria-selected="true"] { background: var(--surface-alt); outline: none; }
+  .ddi-list li[hidden] { display: none; }
+  .ddi-code { color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+  .ddi-none { margin: 8px 10px; font-size: .88rem; color: var(--ink-muted); }
   @media (max-width: 520px) { .att-row { grid-template-columns: 1fr; } }
 </style>
 
@@ -106,6 +145,59 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
   modal?.addEventListener('click', (e) => { if (e.target === modal) close(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal && !modal.hasAttribute('hidden')) close(); });
 
+  // Seletor de DDI pesquisável (nome do país ou código, ex.: "portugal" ou "+351").
+  const ddi = document.querySelector('[data-ddi]') as HTMLElement | null;
+  const ddiBtn = ddi?.querySelector('[data-ddi-btn]') as HTMLButtonElement | null;
+  const ddiPop = ddi?.querySelector('[data-ddi-pop]') as HTMLElement | null;
+  const ddiSearch = ddi?.querySelector('[data-ddi-search]') as HTMLInputElement | null;
+  const ddiNone = ddi?.querySelector('[data-ddi-none]') as HTMLElement | null;
+  const ddiValue = ddi?.querySelector('[data-ddi-value]') as HTMLInputElement | null;
+  const opts = Array.from(ddi?.querySelectorAll<HTMLElement>('[data-ddi-list] li') ?? []);
+  const defaultOpt = opts[0];
+  const norm = (v: string) => v.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+  function setDdi(li?: HTMLElement) {
+    if (!li || !ddiValue) return;
+    opts.forEach((o) => o.setAttribute('aria-selected', String(o === li)));
+    ddiValue.value = li.dataset.dial || '';
+    const lbl = ddi?.querySelector('[data-ddi-label]'); if (lbl) lbl.textContent = li.dataset.dial || '';
+    const iso = ddi?.querySelector('[data-ddi-iso]'); if (iso) iso.textContent = li.dataset.iso || '';
+  }
+  function openDdi(open: boolean) {
+    if (!ddiPop || !ddiBtn) return;
+    ddiPop.hidden = !open;
+    ddiBtn.setAttribute('aria-expanded', String(open));
+    if (open) { if (ddiSearch) { ddiSearch.value = ''; filter(''); ddiSearch.focus(); } }
+  }
+  function filter(q: string) {
+    const nq = norm(q); const digits = q.replace(/[^\d]/g, '');
+    let shown = 0;
+    for (const o of opts) {
+      const hay = norm(o.dataset.q || '');
+      const dial = (o.dataset.dial || '').replace('+', '');
+      const ok = !nq || hay.includes(nq) || (digits.length > 0 && dial.startsWith(digits));
+      o.hidden = !ok; if (ok) shown++;
+    }
+    if (ddiNone) ddiNone.hidden = shown > 0;
+  }
+  ddiBtn?.addEventListener('click', () => openDdi(ddiPop?.hidden ?? true));
+  ddiSearch?.addEventListener('input', () => filter(ddiSearch.value));
+  ddiSearch?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); const firstVisible = opts.find((o) => !o.hidden); if (firstVisible) { setDdi(firstVisible); openDdi(false); ddiBtn?.focus(); } }
+    if (e.key === 'ArrowDown') { e.preventDefault(); opts.find((o) => !o.hidden)?.focus(); }
+    if (e.key === 'Escape') { e.stopPropagation(); openDdi(false); ddiBtn?.focus(); }
+  });
+  opts.forEach((o) => {
+    o.addEventListener('click', () => { setDdi(o); openDdi(false); ddiBtn?.focus(); });
+    o.addEventListener('keydown', (e) => {
+      const vis = opts.filter((x) => !x.hidden); const i = vis.indexOf(o);
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setDdi(o); openDdi(false); ddiBtn?.focus(); }
+      if (e.key === 'ArrowDown') { e.preventDefault(); vis[i + 1]?.focus(); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); (vis[i - 1] ?? ddiSearch)?.focus(); }
+      if (e.key === 'Escape') { e.stopPropagation(); openDdi(false); ddiBtn?.focus(); }
+    });
+  });
+  document.addEventListener('click', (e) => { if (ddi && !ddi.contains(e.target as Node)) openDdi(false); });
+
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!form || !submit) return;
@@ -122,7 +214,7 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
       await sendLead({
         name: String(fd.get('name') || ''),
         email: String(fd.get('email') || ''),
-        phone: String(fd.get('phone') || ''),
+        phone: `${String(fd.get('ddi') || '')} ${String(fd.get('phone') || '').replace(/[^\d]/g, '')}`.trim(),
         unit_slug: String(fd.get('unit_slug') || ''),
         language: String(fd.get('language') || 'pt'),
         message: String(fd.get('message') || ''),
@@ -130,6 +222,7 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
       });
       showMsg(form.dataset.successMsg || 'OK', true);
       form.reset();
+      setDdi(defaultOpt);
     } catch {
       showMsg(form.dataset.errorMsg || 'Erro', false);
     } finally {
